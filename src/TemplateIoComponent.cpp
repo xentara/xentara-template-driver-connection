@@ -306,9 +306,9 @@ auto TemplateIoComponent::createIo(const io::IoClass &ioClass, plugin::SharedFac
 	{
 		return factory.makeShared<TemplateInput>(*this);
 	}
-	else if (&ioClass == &TemplateInput::Class::instance())
+	else if (&ioClass == &TemplateOutput::Class::instance())
 	{
-		return factory.makeShared<TemplateInput>(*this);
+		return factory.makeShared<TemplateOutput>(*this);
 	}
 
 	// TODO: add any other supported I/O point types

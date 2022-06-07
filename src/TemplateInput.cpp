@@ -89,7 +89,7 @@ auto TemplateInput::read(std::chrono::system_clock::time_point timeStamp) -> voi
 		double value = {};
 
 		// TODO: if the read function does not throw errors, but uses return types or internal handle state,
-		// throw an std::system_error here on failure, or call _state.update() directly.
+		// throw an std::system_error here on failure, or call updateState() directly.
 
 		// The read was successful
 		updateState(timeStamp, value);
