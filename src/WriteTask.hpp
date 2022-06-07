@@ -11,18 +11,8 @@
 namespace xentara::plugins::templateDriver
 {
 
-// A concept for objects that can be used as targets for WriteTask
-template <typename Target>
-concept WriteTaskTarget = requires(
-	Target &target, const process::ExecutionContext &context, std::chrono::system_clock::time_point timeStamp)
-{
-	{ target.requestConnect(timeStamp) };
-	{ target.requestDisconnect(timeStamp) };
-	{ target.performWriteTask(context) };
-};
-
 // This class providing callbacks for the Xentara scheduler for the "read" task of I/O points
-template <WriteTaskTarget Target>
+template <typename Target>
 class WriteTask final : public process::Task
 {
 public:
@@ -49,7 +39,7 @@ private:
 	std::reference_wrapper<Target> _target;
 };
 
-template <WriteTaskTarget Target>
+template <typename Target>
 auto WriteTask<Target>::preparePreOperational(const process::ExecutionContext &context) -> Status
 {
 	// Request a connection
@@ -58,7 +48,7 @@ auto WriteTask<Target>::preparePreOperational(const process::ExecutionContext &c
 	return Status::Ready;
 }
 
-template <WriteTaskTarget Target>
+template <typename Target>
 auto WriteTask<Target>::preOperational(const process::ExecutionContext &context) -> Status
 {
 	// We just do the same thing as in the operational stage
@@ -67,14 +57,14 @@ auto WriteTask<Target>::preOperational(const process::ExecutionContext &context)
 	return Status::Ready;
 }
 
-template <WriteTaskTarget Target>
+template <typename Target>
 auto WriteTask<Target>::operational(const process::ExecutionContext &context) -> void
 {
 	// read the value
 	_target.get().performWriteTask(context);
 }
 
-template <WriteTaskTarget Target>
+template <typename Target>
 auto WriteTask<Target>::preparePostOperational(const process::ExecutionContext &context) -> Status
 {
 	// Request a disconnect

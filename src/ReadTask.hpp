@@ -11,18 +11,8 @@
 namespace xentara::plugins::templateDriver
 {
 
-// A concept for objects that can be used as targets for ReadTask
-template <typename Target>
-concept ReadTaskTarget = requires(
-	Target &target, const process::ExecutionContext &context, std::chrono::system_clock::time_point timeStamp)
-{
-	{ target.requestConnect(timeStamp) };
-	{ target.requestDisconnect(timeStamp) };
-	{ target.performReadTask(context) };
-};
-
 // This class providing callbacks for the Xentara scheduler for the "read" task of I/O points
-template <ReadTaskTarget Target>
+template <typename Target>
 class ReadTask final : public process::Task
 {
 public:
@@ -49,7 +39,7 @@ private:
 	std::reference_wrapper<Target> _target;
 };
 
-template <ReadTaskTarget Target>
+template <typename Target>
 auto ReadTask<Target>::preparePreOperational(const process::ExecutionContext &context) -> Status
 {
 	// Request a connection
@@ -63,7 +53,7 @@ auto ReadTask<Target>::preparePreOperational(const process::ExecutionContext &co
 	return Status::Ready;
 }
 
-template <ReadTaskTarget Target>
+template <typename Target>
 auto ReadTask<Target>::preOperational(const process::ExecutionContext &context) -> Status
 {
 	// We just do the same thing as in the operational stage
@@ -72,14 +62,14 @@ auto ReadTask<Target>::preOperational(const process::ExecutionContext &context) 
 	return Status::Ready;
 }
 
-template <ReadTaskTarget Target>
+template <typename Target>
 auto ReadTask<Target>::operational(const process::ExecutionContext &context) -> void
 {
 	// read the value
 	_target.get().performReadTask(context);
 }
 
-template <ReadTaskTarget Target>
+template <typename Target>
 auto ReadTask<Target>::preparePostOperational(const process::ExecutionContext &context) -> Status
 {
 	// Request a disconnect

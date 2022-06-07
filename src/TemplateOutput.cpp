@@ -89,26 +89,25 @@ auto TemplateOutput::read(std::chrono::system_clock::time_point timeStamp) -> vo
 		double value = {};
 
 		// TODO: if the read function does not throw errors, but uses return types or internal handle state,
-		// throw an std::system_error here on failure, or call updateReadState() directly.
+		// throw an std::system_error here on failure, or call handleReadError() directly.
 
 		// The read was successful
-		updateReadState(timeStamp, value);
+		_readState.update(timeStamp, value);
 	}
 	catch (const std::exception &exception)
 	{
 		// Get the error from the current exception using this special utility function
 		const auto error = utils::eh::currentErrorCode();
 		// Update the state
-		updateReadState(timeStamp, {}, error);
+		handleReadError(timeStamp, error);
 	}
 }
 
-auto TemplateOutput::updateReadState(std::chrono::system_clock::time_point timeStamp, double value, std::error_code error)
+auto TemplateOutput::handleReadError(std::chrono::system_clock::time_point timeStamp, std::error_code error)
 	-> void
 {
 	// Update our own state
-	_readState.update(timeStamp, {}, error);
-
+	_readState.update(timeStamp, error);
 	// Notify the I/O component
 	_ioComponent.get().handleError(timeStamp, error, this);
 }
@@ -142,24 +141,23 @@ auto TemplateOutput::write(std::chrono::system_clock::time_point timeStamp) -> v
 		// TODO: if the write function does not throw errors, but uses return types or internal handle state,
 		// throw an std::system_error here on failure, or call updateWriteState() directly.
 
-		// The read was successful
-		updateWriteState(timeStamp);
+		// The write was successful
+		_writeState.update(timeStamp);
 	}
 	catch (const std::exception &exception)
 	{
 		// Get the error from the current exception using this special utility function
 		const auto error = utils::eh::currentErrorCode();
 		// Update the state
-		updateWriteState(timeStamp, error);
+		handleWriteError(timeStamp, error);
 	}
 }
 
-auto TemplateOutput::updateWriteState(std::chrono::system_clock::time_point timeStamp, std::error_code error)
+auto TemplateOutput::handleWriteError(std::chrono::system_clock::time_point timeStamp, std::error_code error)
 	-> void
 {
 	// Update our own state
 	_writeState.update(timeStamp, error);
-
 	// Notify the I/O component
 	_ioComponent.get().handleError(timeStamp, error, this);
 }
@@ -278,7 +276,7 @@ auto TemplateOutput::ioComponentStateChanged(std::chrono::system_clock::time_poi
 	// Update the read state. We do not notify the I/O component, because that is who this message comes from in the first place.
 	// Note: the write state is not updated, because the write state simply contains the last write error, which is unaffected
 	// by I/O component errors.
-	_readState.update(timeStamp, {}, error);
+	_readState.update(timeStamp, error);
 }
 
 } // namespace xentara::plugins::templateDriver

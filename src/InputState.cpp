@@ -14,7 +14,6 @@ auto InputState<DataType>::resolveAttribute(std::u16string_view name) -> const m
 	// Check all the attributes we support
 	return model::Attribute::resolve(name,
 		model::Attribute::kUpdateTime,
-		kValueAttribute,
 		model::Attribute::kChangeTime,
 		model::Attribute::kQuality,
 		attributes::kError);
@@ -49,10 +48,6 @@ auto InputState<DataType>::readHandle(const model::Attribute &attribute) const n
 	{
 		return _dataBlock.member(&State::_updateTime);
 	}
-	else if (attribute == kValueAttribute)
-	{
-		return _dataBlock.member(&State::_value);
-	}
 	else if (attribute == model::Attribute::kChangeTime)
 	{
 		return _dataBlock.member(&State::_changeTime);
@@ -83,7 +78,7 @@ auto InputState<DataType>::prepare() -> void
 }
 
 template <std::regular DataType>
-auto InputState<DataType>::update(std::chrono::system_clock::time_point time, const DataType &value, std::error_code error) -> void
+auto InputState<DataType>::update(std::chrono::system_clock::time_point timeStamp, const utils::eh::Failable<DataType> &valueOrError) -> void
 {
 	// Make a write sentinel
 	memory::WriteSentinel sentinel { _dataBlock };
@@ -91,10 +86,36 @@ auto InputState<DataType>::update(std::chrono::system_clock::time_point time, co
 	const auto &oldState = sentinel.oldValue();
 
 	// Update the state
-	state._updateTime = context.scheduledTime();
-	state._value = value;
-	state._quality = error ? data::Quality::Bad : data::Quality::Good;
-	state._error = attributes::errorCode(error);
+	state._updateTime = timeStamp;
+
+	// See if we have a value
+	if (const auto value = valueOrError.value())
+	{
+		// Set the value
+		state._value = *value;
+
+		// Reset the error
+		state._quality = data::Quality::Good;
+		state._error = 0;
+	}
+	// We don't have a value, but an error
+	else
+	{
+		// Reset the value to a default constructed value
+		state._value = {};
+
+		// Get the error code
+		auto error = valueOrError.error();
+		// We cannot reset the error to Ok if we don't have a value. So we use the special custom error code instead.
+		if (!error)
+		{
+			error = CustomError::NoData;
+		}
+
+		// Set the error
+		state._quality = data::Quality::Bad;
+		state._error = attributes::errorCode(error);
+	}
 
 	// Detect changes
 	const auto valueChanged = state._value != oldState._value;
@@ -104,7 +125,7 @@ auto InputState<DataType>::update(std::chrono::system_clock::time_point time, co
 
 	// Update the change time, if necessary. We always need to write the change time, even if it is the same as before,
 	// because the memory resource might use swap-in.
-	state._changeTime = changed ? context.scheduledTime() : oldState._changeTime;
+	state._changeTime = changed ? timeStamp : oldState._changeTime;
 
 	// Commit the data before sending the events
 	sentinel.commit();

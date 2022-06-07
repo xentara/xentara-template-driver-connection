@@ -109,6 +109,10 @@ protected:
 		const FallbackConfigHandler &fallbackHandler) -> void final;
 
 private:
+	// The tasks need access to out private member functions
+	friend class ReadTask<TemplateOutput>;
+	friend class WriteTask<TemplateOutput>;
+
 	// This function is forwarded to the I/O component.
 	auto requestConnect(std::chrono::system_clock::time_point timeStamp) noexcept -> void
 	{
@@ -125,15 +129,15 @@ private:
 	auto performReadTask(const process::ExecutionContext &context) -> void;
 	// Attempts to read the data from the I/O component and updates the state accordingly.
 	auto read(std::chrono::system_clock::time_point timeStamp) -> void;
-	// Updates the read state and sends events
-	auto updateReadState(std::chrono::system_clock::time_point timeStamp, double value, std::error_code error = std::error_code()) -> void;
+	// Handles a read error
+	auto handleReadError(std::chrono::system_clock::time_point timeStamp, std::error_code error) -> void;
 
 	// This function is called by the "write" task. It attempts to write the value if the I/O component is up.
 	auto performWriteTask(const process::ExecutionContext &context) -> void;
 	// Attempts to write any pending value to the I/O component and updates the state accordingly.
 	auto write(std::chrono::system_clock::time_point timeStamp) -> void;	
-	// Updates the write state and sends events
-	auto updateWriteState(std::chrono::system_clock::time_point timeStamp, std::error_code error = std::error_code()) -> void;
+	// Handles a write error
+	auto handleWriteError(std::chrono::system_clock::time_point timeStamp, std::error_code error) -> void;
 
 	// The I/O component this output belongs to
 	// TODO: give this a more descriptive name, e.g. "_device"

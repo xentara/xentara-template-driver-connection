@@ -89,26 +89,25 @@ auto TemplateInput::read(std::chrono::system_clock::time_point timeStamp) -> voi
 		double value = {};
 
 		// TODO: if the read function does not throw errors, but uses return types or internal handle state,
-		// throw an std::system_error here on failure, or call updateState() directly.
+		// throw an std::system_error here on failure, or call handleReadError() directly.
 
 		// The read was successful
-		updateState(timeStamp, value);
+		_state.update(timeStamp, value);
 	}
 	catch (const std::exception &exception)
 	{
 		// Get the error from the current exception using this special utility function
 		const auto error = utils::eh::currentErrorCode();
 		// Update the state
-		updateState(timeStamp, {}, error);
+		handleReadError(timeStamp, error);
 	}
 }
 
-auto TemplateInput::updateState(std::chrono::system_clock::time_point timeStamp, double value, std::error_code error)
+auto TemplateInput::handleReadError(std::chrono::system_clock::time_point timeStamp, std::error_code error)
 	-> void
 {
 	// Update our own state
-	_state.update(timeStamp, {}, error);
-
+	_state.update(timeStamp,error);
 	// Notify the I/O component
 	_ioComponent.get().handleError(timeStamp, error, this);
 }
@@ -194,7 +193,7 @@ auto TemplateInput::prepare() -> void
 auto TemplateInput::ioComponentStateChanged(std::chrono::system_clock::time_point timeStamp, std::error_code error) -> void
 {
 	// Update the state. We do not notify the I/O component, because that is who this message comes from in the first place.
-	_state.update(timeStamp, {}, error);
+	_state.update(timeStamp, error);
 }
 
 } // namespace xentara::plugins::templateDriver

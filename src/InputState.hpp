@@ -8,6 +8,7 @@
 #include <xentara/memory/memoryResources.hpp>
 #include <xentara/memory/ObjectBlock.hpp>
 #include <xentara/process/Event.hpp>
+#include <xentara/utils/eh/Failable.hpp>
 
 #include <chrono>
 #include <concepts>
@@ -44,7 +45,8 @@ public:
 	auto prepare() -> void;
 
 	// Updates the data and sends events
-	auto update(std::chrono::system_clock::time_point time, const DataType &value, std::error_code error = std::error_code()) -> void;
+	// Note: utils::eh::Failable is a variant that can hold either a value or an std::error_code
+	auto update(std::chrono::system_clock::time_point timeStamp, const utils::eh::Failable<DataType> &valueOrError) -> void;
 
 private:
 	// This structure is used to represent the state inside the memory block
@@ -59,7 +61,7 @@ private:
 		// The quality of the value
 		data::Quality _quality { data::Quality::Bad };
 		// The error code when reading the value, or 0 for none.
-		attributes::ErrorCode _error { errorAttributeValue(CustomError::NotConnected) };
+		attributes::ErrorCode _error { attributes::errorCode(CustomError::NotConnected) };
 	};
 
 	// A Xentara event that is fired when the value changes

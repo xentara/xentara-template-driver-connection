@@ -4,7 +4,6 @@
 #include "Attributes.hpp"
 #include "CustomError.hpp"
 
-#include <xentara/data/String.hpp>
 #include <xentara/io/Component.hpp>
 #include <xentara/io/ComponentClass.hpp>
 #include <xentara/plugin/EnableSharedFromThis.hpp>
@@ -16,6 +15,7 @@
 
 #include <string_view>
 #include <functional>
+#include <forward_list>
 
 // TODO: rename namespace
 namespace xentara::plugins::templateDriver
@@ -162,9 +162,9 @@ private:
 		// The state of the I/O component
 		bool _deviceState { false };
 		// The last time the component was connected or disconnected
-		std::chrono::system_clock::time_point _changeTime { std::chrono::system_clock::time_point::min() };
+		std::chrono::system_clock::time_point _connectionTime { std::chrono::system_clock::time_point::min() };
 		// The error code when connecting, or 0 for none.
-		attributes::ErrorCode _error { errorAttributeValue(CustomError::NoData) };
+		attributes::ErrorCode _error { attributes::errorCode(CustomError::NotConnected) };
 	};
 
 	// This class providing callbacks for the Xentara scheduler for the "reconnect" task

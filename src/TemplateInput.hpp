@@ -105,6 +105,9 @@ protected:
 		const FallbackConfigHandler &fallbackHandler) -> void final;
 
 private:
+	// The read task needs access to out private member functions
+	friend class ReadTask<TemplateInput>;
+
 	// This function is forwarded to the I/O component.
 	auto requestConnect(std::chrono::system_clock::time_point timeStamp) noexcept -> void
 	{
@@ -121,8 +124,8 @@ private:
 	auto performReadTask(const process::ExecutionContext &context) -> void;
 	// Attempts to read the data from the I/O component and updates the state accordingly.
 	auto read(std::chrono::system_clock::time_point timeStamp) -> void;
-	// Updates the state and sends events
-	auto updateState(std::chrono::system_clock::time_point timeStamp, double value, std::error_code error = std::error_code()) -> void;
+	// Handles a read error
+	auto handleReadError(std::chrono::system_clock::time_point timeStamp, std::error_code error) -> void;
 
 	// The I/O component this input belongs to
 	// TODO: give this a more descriptive name, e.g. "_device"
