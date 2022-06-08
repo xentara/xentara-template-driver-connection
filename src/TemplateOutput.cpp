@@ -139,7 +139,7 @@ auto TemplateOutput::write(std::chrono::system_clock::time_point timeStamp) -> v
 		// TODO: write the value
 
 		// TODO: if the write function does not throw errors, but uses return types or internal handle state,
-		// throw an std::system_error here on failure, or call updateWriteState() directly.
+		// throw an std::system_error here on failure, or call handleWriteError() directly.
 
 		// The write was successful
 		_writeState.update(timeStamp);
