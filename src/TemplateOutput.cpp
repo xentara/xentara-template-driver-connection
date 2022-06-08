@@ -14,8 +14,6 @@
 #include <xentara/utils/json/decoder/Errors.hpp>
 #include <xentara/utils/eh/currentErrorCode.hpp>
 
-#include <filesystem>
-
 namespace xentara::plugins::templateDriver
 {
 	
