@@ -331,7 +331,7 @@ auto TemplateIoComponent::resolveTask(std::u16string_view name) -> std::shared_p
 		return std::shared_ptr<process::Task>(sharedFromThis(), &_reconnectTask);
 	}
 
-	// TODO resolve any additional events
+	// TODO resolve any additional tasks
 
 	return nullptr;
 }
@@ -348,7 +348,7 @@ auto TemplateIoComponent::resolveEvent(std::u16string_view name) -> std::shared_
 		return std::shared_ptr<process::Event>(sharedFromThis(), &_disconnectedEvent);
 	}
 
-	// TODO resolve any additional tasks
+	// TODO resolve any additional events
 
 	return nullptr;
 }
