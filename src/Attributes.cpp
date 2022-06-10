@@ -16,7 +16,10 @@ const model::Attribute kError { model::Attribute::kError, model::Attribute::Acce
 const model::Attribute kWriteError { model::Attribute::kWriteError, model::Attribute::Access::ReadOnly, data::DataType::kInteger };
 
 // TODO: assign a unique UUID
-const model::Attribute kDeviceError { "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"_uuid, u"error"sv, model::Attribute::Access::ReadOnly, data::DataType::kInteger };
+const model::Attribute kConnectionTime { "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"_uuid, u"connectionTime"sv, model::Attribute::Access::ReadOnly, data::DataType::kTimeStamp };
+
+// TODO: assign a unique UUID
+const model::Attribute kDeviceError { "ffffffff-ffff-ffff-ffff-ffffffffffff"_uuid, u"error"sv, model::Attribute::Access::ReadOnly, data::DataType::kInteger };
 
 namespace
 {

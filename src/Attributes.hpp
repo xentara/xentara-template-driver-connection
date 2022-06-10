@@ -17,6 +17,8 @@ extern const model::Attribute kError;
 // A Xentara attribute containing a write error code for an I/O point
 extern const model::Attribute kWriteError;
 
+// A Xentara attribute containing the connection time for an I/O component
+extern const model::Attribute kConnectionTime;
 // A Xentara attribute containing an error code for an I/O component
 extern const model::Attribute kDeviceError;
 

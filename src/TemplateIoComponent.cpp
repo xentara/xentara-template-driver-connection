@@ -321,6 +321,7 @@ auto TemplateIoComponent::resolveAttribute(std::u16string_view name) -> const mo
 	// TODO: add any additional attributes this class supports
 	return model::Attribute::resolve(name,
 		model::Attribute::kDeviceState,
+		attributes::kConnectionTime,
 		attributes::kDeviceError);
 }
 
@@ -359,6 +360,10 @@ auto TemplateIoComponent::readHandle(const model::Attribute &attribute) const no
 	if (attribute == model::Attribute::kDeviceState)
 	{
 		return _stateDataBlock.member(&State::_deviceState);
+	}
+	else if (attribute == attributes::kConnectionTime)
+	{
+		return _stateDataBlock.member(&State::_connectionTime);
 	}
 	else if (attribute == attributes::kDeviceError)
 	{
