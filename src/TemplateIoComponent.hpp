@@ -92,7 +92,7 @@ public:
 		// (The = 0 ensures that this class will remain abstract, even if we should remove all other abstract functions later)
 		virtual ~ErrorSink() = 0;
 
-		// Called on error, or on success. This function is called in thee instances:
+		// Called on error, or on success. This function is called in three instances:
 		// 1. A connection was successfully established:	error will be a default costructed std::error_code object
 		// 2. A connection was gracefully closed:			error will be a CustomError::NotConnected
 		// 3. The connection was lost unexpectedly:			error will contain an appropriate error code
@@ -156,7 +156,7 @@ protected:
 		const FallbackConfigHandler &fallbackHandler) -> void final;
 
 private:
-	// This structure represents the current state of the input
+	// This structure represents the current state of the I/O component
 	struct State
 	{
 		// The state of the I/O component
