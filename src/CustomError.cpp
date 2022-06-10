@@ -23,7 +23,8 @@ namespace
 
 	auto ErrorCategory::name() const noexcept -> const char *
 	{
-		return "Xentara.simpleSampleDriver";
+		// TODO: Rename error cotegory
+		return "Xentara.templateDriver";
 	}
 
 	auto ErrorCategory::message(int errorCode) const -> std::string
