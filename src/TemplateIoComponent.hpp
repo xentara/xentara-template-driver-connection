@@ -145,9 +145,7 @@ public:
 
 	auto readHandle(const model::Attribute &attribute) const noexcept -> data::ReadHandle final;
 
-	auto prepare() -> void final;
-
-	// TODO: add cleanup(), postPrepare(), and preCleanup() functions as necessary
+	auto realize() -> void final;
 
 protected:
 	auto loadConfig(const ConfigIntializer &initializer,

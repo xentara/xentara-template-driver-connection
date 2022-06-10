@@ -61,7 +61,7 @@ auto OutputState<DataType>::valueWriteHandle(std::shared_ptr<void> parent) noexc
 }
 
 template <std::regular DataType>
-auto OutputState<DataType>::prepare() -> void
+auto OutputState<DataType>::realize() -> void
 {
 	// Create the data block
 	_dataBlock.create(memory::memoryResources::data());

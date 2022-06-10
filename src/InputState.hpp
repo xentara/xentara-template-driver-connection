@@ -41,8 +41,8 @@ public:
 	// Createas a read-handle for the value attribute
 	auto valueReadHandle() const noexcept -> data::ReadHandle;
 
-	// Prepares the state for operation
-	auto prepare() -> void;
+	// Realizes the state
+	auto realize() -> void;
 
 	// Updates the data and sends events
 	// Note: utils::eh::Failable is a variant that can hold either a value or an std::error_code

@@ -71,7 +71,7 @@ auto InputState<DataType>::valueReadHandle() const noexcept -> data::ReadHandle
 }
 
 template <std::regular DataType>
-auto InputState<DataType>::prepare() -> void
+auto InputState<DataType>::realize() -> void
 {
 	// Create the data block
 	_dataBlock.create(memory::memoryResources::data());

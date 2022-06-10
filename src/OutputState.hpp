@@ -43,8 +43,8 @@ public:
 	// This is why the parent pointer is passed along.
 	auto valueWriteHandle(std::shared_ptr<void> parent) noexcept -> data::WriteHandle;
 
-	// Prepares the state for operation
-	auto prepare() -> void;
+	// Realizes the state
+	auto realize() -> void;
 
 	// Gets the last scheduled value, or std::nullopt if none was scheduled since the last call
 	auto fetchScheduledValue() -> std::optional<DataType>

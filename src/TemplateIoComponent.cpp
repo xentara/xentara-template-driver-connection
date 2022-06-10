@@ -371,13 +371,10 @@ auto TemplateIoComponent::readHandle(const model::Attribute &attribute) const no
 	return data::ReadHandle::Error::Unknown;
 }
 
-auto TemplateIoComponent::prepare() -> void
+auto TemplateIoComponent::realize() -> void
 {
 	// Create the data block
 	_stateDataBlock.create(memory::memoryResources::data());
-
-	// TODO: add any other initialization that should be done in the main thread before
-	// the scheduling of pipelines in execution tracks is started
 }
 
 auto TemplateIoComponent::ReconnectTask::preparePreOperational(const process::ExecutionContext &context) -> Status
