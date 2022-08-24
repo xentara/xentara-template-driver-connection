@@ -57,7 +57,7 @@ auto OutputState<DataType>::readHandle(const model::Attribute &attribute) const 
 template <std::regular DataType>
 auto OutputState<DataType>::valueWriteHandle(std::shared_ptr<void> parent) noexcept -> data::WriteHandle
 {
-	return { std::in_place_type<double>, &OutputState<DataType>::schedule, std::shared_ptr<OutputState<DataType>>(parent, this) };
+	return { std::in_place_type<DataType>, &OutputState<DataType>::schedule, std::shared_ptr<OutputState<DataType>>(parent, this) };
 }
 
 template <std::regular DataType>

@@ -79,7 +79,7 @@ private:
 	process::Event _writeErrorEvent { io::Direction::Output };
 
 	// The last pending write value
-	utils::threads::AtomicOptional<double> _pendingValue;
+	utils::threads::AtomicOptional<DataType> _pendingValue;
 	// The value needs to be atomic, or blocking will occurr
 	static_assert(decltype(_pendingValue)::is_always_lock_free);
 

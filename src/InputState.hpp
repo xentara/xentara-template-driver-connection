@@ -55,7 +55,7 @@ private:
 		// The update time stamp
 		std::chrono::system_clock::time_point _updateTime { std::chrono::system_clock::time_point::min() };
 		// The current value
-		double _value {};
+		DataType _value {};
 		// The change time stamp
 		std::chrono::system_clock::time_point _changeTime { std::chrono::system_clock::time_point::min() };
 		// The quality of the value
