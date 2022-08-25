@@ -104,7 +104,7 @@ auto TemplateInput::handleReadError(std::chrono::system_clock::time_point timeSt
 	-> void
 {
 	// Update our own state
-	_state.update(timeStamp,error);
+	_state.update(timeStamp, error);
 	// Notify the I/O component
 	_ioComponent.get().handleError(timeStamp, error, this);
 }
