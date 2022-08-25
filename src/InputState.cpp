@@ -61,7 +61,7 @@ auto InputState<DataType>::readHandle(const model::Attribute &attribute) const n
 		return _dataBlock.member(&State::_error);
 	}
 
-	return data::ReadHandle::Error::Unknown;
+	return std::nullopt;
 }
 
 template <std::regular DataType>

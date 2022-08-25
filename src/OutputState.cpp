@@ -51,7 +51,7 @@ auto OutputState<DataType>::readHandle(const model::Attribute &attribute) const 
 		return _dataBlock.member(&State::_writeError);
 	}
 
-	return data::ReadHandle::Error::Unknown;
+	return std::nullopt;
 }
 
 template <std::regular DataType>
