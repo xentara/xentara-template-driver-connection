@@ -77,12 +77,12 @@ private:
 	// A Xentara event that is fired when a write error occurred
 	process::Event _writeErrorEvent { io::Direction::Output };
 
-	// The last pending write value
+	// The the last scheduled value, or std::nullopt if none is pending
 	utils::threads::AtomicOptional<DataType> _pendingValue;
 	// The value needs to be atomic, or blocking will occurr
 	static_assert(decltype(_pendingValue)::is_always_lock_free);
 
-	// The the last scheduled value, or std::nullopt if none is pending
+	// The data block that contains the state
 	memory::ObjectBlock<memory::memoryResources::Data, State> _dataBlock;
 };
 
