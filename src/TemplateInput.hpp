@@ -19,8 +19,6 @@ namespace xentara::plugins::templateDriver
 
 using namespace std::literals;
 
-class TemplateIoComponent;
-
 // A class representing a specific type of input.
 // TODO: rename this class to something more descriptive
 class TemplateInput final : public io::Io, public TemplateIoComponent::ErrorSink, public plugin::EnableSharedFromThis<TemplateInput>

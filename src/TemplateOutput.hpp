@@ -21,8 +21,6 @@ namespace xentara::plugins::templateDriver
 
 using namespace std::literals;
 
-class TemplateIoComponent;
-
 // A class representing a specific type of output.
 // TODO: rename this class to something more descriptive
 class TemplateOutput final : public io::Io, public TemplateIoComponent::ErrorSink, public plugin::EnableSharedFromThis<TemplateOutput>
@@ -96,7 +94,7 @@ public:
 
 	auto ioComponentStateChanged(std::chrono::system_clock::time_point timeStamp, std::error_code error) -> void final;
 
-	// A Xentara attribute containing the current value. This is a member of this class rather than
+	// A Xentara attribute containing the current value. This is a membor of this class rather than
 	// of the attributes namespace, because the access flags and type may differ from class to class
 	static const model::Attribute kValueAttribute;
 
