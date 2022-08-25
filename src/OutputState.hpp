@@ -52,7 +52,7 @@ public:
 	}
 
 	// Updates the data and sends events
-	auto update(std::chrono::system_clock::time_point timeStamp, std::error_code error = std::error_code()) -> void;
+	auto update(std::chrono::system_clock::time_point timeStamp, std::error_code error) -> void;
 
 private:
 	// This structure is used to represent the state inside the memory block

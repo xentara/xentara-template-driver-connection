@@ -140,7 +140,7 @@ auto TemplateOutput::write(std::chrono::system_clock::time_point timeStamp) -> v
 		// throw an std::system_error here on failure, or call handleWriteError() directly.
 
 		// The write was successful
-		_writeState.update(timeStamp);
+		_writeState.update(timeStamp, std::error_code());
 	}
 	catch (const std::exception &exception)
 	{
