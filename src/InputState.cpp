@@ -121,7 +121,7 @@ auto InputState<DataType>::update(std::chrono::system_clock::time_point timeStam
 	const auto valueChanged = state._value != oldState._value;
 	const auto qualityChanged = state._quality != oldState._quality;
 	const auto errorChanged = state._error != oldState._error;
-	const bool changed = valueChanged | qualityChanged | errorChanged;
+	const auto changed = valueChanged || qualityChanged || errorChanged;
 
 	// Update the change time, if necessary. We always need to write the change time, even if it is the same as before,
 	// because the memory resource might use swap-in.
