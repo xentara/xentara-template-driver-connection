@@ -3,7 +3,6 @@
 
 #include "Attributes.hpp"
 
-#include <xentara/data/Quality.hpp>
 #include <xentara/data/ReadHandle.hpp>
 #include <xentara/data/WriteHandle.hpp>
 #include <xentara/memory/memoryResources.hpp>
