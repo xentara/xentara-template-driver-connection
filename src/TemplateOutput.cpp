@@ -21,8 +21,6 @@ using namespace std::literals;
 
 TemplateOutput::Class TemplateOutput::Class::_instance;
 
-using namespace std::literals;
-
 const model::Attribute TemplateOutput::kValueAttribute { model::Attribute::kValue, model::Attribute::Access::ReadWrite, data::DataType::kFloatingPoint };
 
 auto TemplateOutput::loadConfig(const ConfigIntializer &initializer,

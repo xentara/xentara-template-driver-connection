@@ -20,8 +20,6 @@ using namespace std::literals;
 
 TemplateInput::Class TemplateInput::Class::_instance;
 
-using namespace std::literals;
-
 const model::Attribute TemplateInput::kValueAttribute { model::Attribute::kValue, model::Attribute::Access::ReadOnly, data::DataType::kFloatingPoint };
 
 auto TemplateInput::loadConfig(const ConfigIntializer &initializer,
