@@ -29,7 +29,7 @@ public:
 	auto resolveAttribute(std::u16string_view name) -> const model::Attribute *;
 
 	// Resolves an event.
-	// Note: This function the aliasing constructor of std::shared_ptr, which will cause the returned pointer to the control block of the parent.
+	// Note: This function uses the aliasing constructor of std::shared_ptr, which will cause the returned pointer to the control block of the parent.
 	// This is why the parent pointer is passed along.
 	auto resolveEvent(std::u16string_view name, std::shared_ptr<void> parent) -> std::shared_ptr<process::Event>;
 
@@ -38,7 +38,7 @@ public:
 	auto readHandle(const model::Attribute &attribute) const noexcept -> std::optional<data::ReadHandle>;
 
 	// Createas a write-handle for the value attribute
-	// Note: This function the aliasing constructor of std::shared_ptr, which will cause the returned pointer to the control block of the parent.
+	// Note: This function uses the aliasing constructor of std::shared_ptr, which will cause the returned pointer to the control block of the parent.
 	// This is why the parent pointer is passed along.
 	auto valueWriteHandle(std::shared_ptr<void> parent) noexcept -> data::WriteHandle;
 
