@@ -6,7 +6,6 @@
 #include <xentara/data/DataType.hpp>
 #include <xentara/data/ReadHandle.hpp>
 #include <xentara/data/WriteHandle.hpp>
-#include <xentara/memory/WriteSentinel.hpp>
 #include <xentara/model/Attribute.hpp>
 #include <xentara/process/ExecutionContext.hpp>
 #include <xentara/utils/json/decoder/Object.hpp>
