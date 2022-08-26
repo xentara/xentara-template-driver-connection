@@ -19,13 +19,13 @@
 namespace xentara::plugins::templateDriver
 {
 
-// State information for an input.
+// State information for a read operation.
 template <std::regular DataType>
-class InputState final
+class ReadState final
 {
 public:
 	// Resolves an attribute that belong to this state.
-	// The value attribute is not resolved, as it may be shared with an output state.
+	// The value attribute is not resolved, as it may be writable as well, and thus shared with another object that takes care of the write direction.
 	auto resolveAttribute(std::u16string_view name) -> const model::Attribute *;
 
 	// Resolves an event.
@@ -77,6 +77,6 @@ private:
 };
 
 // TODO: add extern template statements for other supported types
-extern template class InputState<double>;
+extern template class ReadState<double>;
 
 } // namespace xentara::plugins::templateDriver

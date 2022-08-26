@@ -2,8 +2,8 @@
 #pragma once
 
 #include "TemplateIoComponent.hpp"
-#include "InputState.hpp"
-#include "OutputState.hpp"
+#include "ReadState.hpp"
+#include "WriteState.hpp"
 #include "ReadTask.hpp"
 #include "SingleValueQueue.hpp"
 #include "WriteTask.hpp"
@@ -147,12 +147,12 @@ private:
 	// TODO: give this a more descriptive name, e.g. "_device"
 	std::reference_wrapper<TemplateIoComponent> _ioComponent;
 
-	// The input state
+	// The read state
 	// TODO: use the correct value type
-	InputState<double> _readState;
-	// The output state
+	ReadState<double> _readState;
+	// The write state
 	// TODO: use the correct value type
-	OutputState _writeState;
+	WriteState _writeState;
 
 	// The queue for the pending output value
 	// TODO: use the correct value type

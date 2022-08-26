@@ -1,5 +1,5 @@
 // Copyright (c) embedded ocean GmbH
-#include "OutputState.hpp"
+#include "WriteState.hpp"
 
 #include "Attributes.hpp"
 
@@ -12,7 +12,7 @@ namespace xentara::plugins::templateDriver
 
 using namespace std::literals;
 
-auto OutputState::resolveAttribute(std::u16string_view name) -> const model::Attribute *
+auto WriteState::resolveAttribute(std::u16string_view name) -> const model::Attribute *
 {
 	// Check all the attributes we support
 	return model::Attribute::resolve(name,
@@ -20,7 +20,7 @@ auto OutputState::resolveAttribute(std::u16string_view name) -> const model::Att
 		attributes::kWriteError);
 }
 
-auto OutputState::resolveEvent(std::u16string_view name, std::shared_ptr<void> parent) -> std::shared_ptr<process::Event>
+auto WriteState::resolveEvent(std::u16string_view name, std::shared_ptr<void> parent) -> std::shared_ptr<process::Event>
 {
 	// Check all the events we support
 	if (name == u"written"sv)
@@ -36,7 +36,7 @@ auto OutputState::resolveEvent(std::u16string_view name, std::shared_ptr<void> p
 	return nullptr;
 }
 
-auto OutputState::readHandle(const model::Attribute &attribute) const noexcept -> std::optional<data::ReadHandle>
+auto WriteState::readHandle(const model::Attribute &attribute) const noexcept -> std::optional<data::ReadHandle>
 {
 	// Try reach readable attribute
 	if (attribute == model::Attribute::kWriteTime)
@@ -51,13 +51,13 @@ auto OutputState::readHandle(const model::Attribute &attribute) const noexcept -
 	return std::nullopt;
 }
 
-auto OutputState::realize() -> void
+auto WriteState::realize() -> void
 {
 	// Create the data block
 	_dataBlock.create(memory::memoryResources::data());
 }
 
-auto OutputState::update(std::chrono::system_clock::time_point timeStamp, std::error_code error) -> void
+auto WriteState::update(std::chrono::system_clock::time_point timeStamp, std::error_code error) -> void
 {
 	// Make a write sentinel
 	memory::WriteSentinel sentinel { _dataBlock };

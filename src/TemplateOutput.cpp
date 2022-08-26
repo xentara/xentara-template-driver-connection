@@ -177,12 +177,12 @@ auto TemplateOutput::resolveAttribute(std::u16string_view name) -> const model::
 		return attribute;
 	}
 
-	// Check the input state attributes
+	// Check the read state attributes
 	if (auto attribute = _readState.resolveAttribute(name))
 	{
 		return attribute;
 	}
-	// Check the output state attributes
+	// Check the write state attributes
 	if (auto attribute = _writeState.resolveAttribute(name))
 	{
 		return attribute;
@@ -210,12 +210,12 @@ auto TemplateOutput::resolveEvent(std::u16string_view name) -> std::shared_ptr<p
 {
 	// TODO: add any events this class supports directly
 
-	// Check the input state events
+	// Check the read state events
 	if (auto event = _readState.resolveEvent(name, sharedFromThis()))
 	{
 		return event;
 	}
-	// Check the output state events
+	// Check the write state events
 	if (auto event = _writeState.resolveEvent(name, sharedFromThis()))
 	{
 		return event;
@@ -232,12 +232,12 @@ auto TemplateOutput::readHandle(const model::Attribute &attribute) const noexcep
 		return _readState.valueReadHandle();
 	}
 	
-	// Check the input state attributes
+	// Check the read state attributes
 	if (auto handle = _readState.readHandle(attribute))
 	{
 		return *handle;
 	}
-	// Check the output state attributes
+	// Check the write state attributes
 	if (auto handle = _writeState.readHandle(attribute))
 	{
 		return *handle;

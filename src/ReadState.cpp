@@ -1,5 +1,5 @@
 // Copyright (c) embedded ocean GmbH
-#include "InputState.hpp"
+#include "ReadState.hpp"
 
 #include "Attributes.hpp"
 
@@ -9,7 +9,7 @@ namespace xentara::plugins::templateDriver
 {
 
 template <std::regular DataType>
-auto InputState<DataType>::resolveAttribute(std::u16string_view name) -> const model::Attribute *
+auto ReadState<DataType>::resolveAttribute(std::u16string_view name) -> const model::Attribute *
 {
 	// Check all the attributes we support
 	return model::Attribute::resolve(name,
@@ -20,7 +20,7 @@ auto InputState<DataType>::resolveAttribute(std::u16string_view name) -> const m
 }
 
 template <std::regular DataType>
-auto InputState<DataType>::resolveEvent(std::u16string_view name, std::shared_ptr<void> parent) -> std::shared_ptr<process::Event>
+auto ReadState<DataType>::resolveEvent(std::u16string_view name, std::shared_ptr<void> parent) -> std::shared_ptr<process::Event>
 {
 	// Check all the events we support
 	if (name == model::Attribute::kValue)
@@ -41,7 +41,7 @@ auto InputState<DataType>::resolveEvent(std::u16string_view name, std::shared_pt
 }
 
 template <std::regular DataType>
-auto InputState<DataType>::readHandle(const model::Attribute &attribute) const noexcept -> std::optional<data::ReadHandle>
+auto ReadState<DataType>::readHandle(const model::Attribute &attribute) const noexcept -> std::optional<data::ReadHandle>
 {
 	// Try reach readable attribute
 	if (attribute == model::Attribute::kUpdateTime)
@@ -65,20 +65,20 @@ auto InputState<DataType>::readHandle(const model::Attribute &attribute) const n
 }
 
 template <std::regular DataType>
-auto InputState<DataType>::valueReadHandle() const noexcept -> data::ReadHandle
+auto ReadState<DataType>::valueReadHandle() const noexcept -> data::ReadHandle
 {
 	return _dataBlock.member(&State::_value);
 }
 
 template <std::regular DataType>
-auto InputState<DataType>::realize() -> void
+auto ReadState<DataType>::realize() -> void
 {
 	// Create the data block
 	_dataBlock.create(memory::memoryResources::data());
 }
 
 template <std::regular DataType>
-auto InputState<DataType>::update(std::chrono::system_clock::time_point timeStamp, const utils::eh::Failable<DataType> &valueOrError) -> void
+auto ReadState<DataType>::update(std::chrono::system_clock::time_point timeStamp, const utils::eh::Failable<DataType> &valueOrError) -> void
 {
 	// Make a write sentinel
 	memory::WriteSentinel sentinel { _dataBlock };
@@ -146,6 +146,6 @@ auto InputState<DataType>::update(std::chrono::system_clock::time_point timeStam
 }
 
 // TODO: add template instantiations for other supported types
-template class InputState<double>;
+template class ReadState<double>;
 
 } // namespace xentara::plugins::templateDriver

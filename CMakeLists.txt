@@ -15,12 +15,10 @@ add_library(
 	"src/CustomError.hpp"
 	"src/Driver.cpp"
 	"src/Driver.hpp"
-	"src/InputState.cpp"
-	"src/InputState.hpp"
-	"src/OutputState.cpp"
-	"src/OutputState.hpp"
 	"src/Plugin.cpp"
 	"src/Plugin.hpp"
+	"src/ReadState.cpp"
+	"src/ReadState.hpp"
 	"src/ReadTask.hpp"
 	"src/TemplateInput.cpp"
 	"src/TemplateInput.hpp"
@@ -28,6 +26,8 @@ add_library(
 	"src/TemplateIoComponent.hpp"
 	"src/TemplateOutput.cpp"
 	"src/TemplateOutput.hpp"
+	"src/WriteState.cpp"
+	"src/WriteState.hpp"
 	"src/WriteTask.hpp"
 )
 

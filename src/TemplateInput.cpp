@@ -127,7 +127,7 @@ auto TemplateInput::resolveAttribute(std::u16string_view name) -> const model::A
 		return attribute;
 	}
 
-	// Check the input state attributes
+	// Check the read state attributes
 	if (auto attribute = _state.resolveAttribute(name))
 	{
 		return attribute;
@@ -151,7 +151,7 @@ auto TemplateInput::resolveEvent(std::u16string_view name) -> std::shared_ptr<pr
 {
 	// TODO: add any events this class supports directly
 
-	// Check the input state events
+	// Check the read state events
 	if (auto event = _state.resolveEvent(name, sharedFromThis()))
 	{
 		return event;
@@ -168,7 +168,7 @@ auto TemplateInput::readHandle(const model::Attribute &attribute) const noexcept
 		return _state.valueReadHandle();
 	}
 	
-	// Check the input state attributes
+	// Check the read state attributes
 	if (auto handle = _state.readHandle(attribute))
 	{
 		return *handle;

@@ -17,12 +17,11 @@
 namespace xentara::plugins::templateDriver
 {
 
-// State information for an output.
-class OutputState final
+// State information for a write operation.
+class WriteState final
 {
 public:
 	// Resolves an attribute that belong to this state.
-	// The value attribute is not resolved, as it may be shared with an output state.
 	auto resolveAttribute(std::u16string_view name) -> const model::Attribute *;
 
 	// Resolves an event.
