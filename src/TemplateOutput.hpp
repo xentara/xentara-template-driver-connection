@@ -5,6 +5,7 @@
 #include "InputState.hpp"
 #include "OutputState.hpp"
 #include "ReadTask.hpp"
+#include "SingleValueQueue.hpp"
 #include "WriteTask.hpp"
 
 #include <xentara/io/Io.hpp>
@@ -94,7 +95,7 @@ public:
 
 	auto ioComponentStateChanged(std::chrono::system_clock::time_point timeStamp, std::error_code error) -> void final;
 
-	// A Xentara attribute containing the current value. This is a membor of this class rather than
+	// A Xentara attribute containing the current value. This is a member of this class rather than
 	// of the attributes namespace, because the access flags and type may differ from class to class
 	static const model::Attribute kValueAttribute;
 
@@ -135,6 +136,13 @@ private:
 	// Handles a write error
 	auto handleWriteError(std::chrono::system_clock::time_point timeStamp, std::error_code error) -> void;
 
+	// Schedules a value to be written. This function is called by the value write handle.
+	// TODO: use the correct value type
+	auto scheduleOutputValue(double value) noexcept
+	{
+		_pendingOutputValue.enqueue(value);
+	}
+
 	// The I/O component this output belongs to
 	// TODO: give this a more descriptive name, e.g. "_device"
 	std::reference_wrapper<TemplateIoComponent> _ioComponent;
@@ -144,7 +152,11 @@ private:
 	InputState<double> _readState;
 	// The output state
 	// TODO: use the correct value type
-	OutputState<double> _writeState;
+	OutputState _writeState;
+
+	// The queue for the pending output value
+	// TODO: use the correct value type
+	SingleValueQueue<double> _pendingOutputValue;
 
 	// The "read" task
 	ReadTask<TemplateOutput> _readTask { *this };

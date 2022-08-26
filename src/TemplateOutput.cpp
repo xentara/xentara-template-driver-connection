@@ -122,7 +122,7 @@ auto TemplateOutput::performWriteTask(const process::ExecutionContext &context) 
 auto TemplateOutput::write(std::chrono::system_clock::time_point timeStamp) -> void
 {
 	// Get the value
-	auto pendingValue = _writeState.fetchScheduledValue();
+	auto pendingValue = _pendingOutputValue.dequeue();
 	// If there was no pending value, just bail
 	if (!pendingValue)
 	{
@@ -253,7 +253,8 @@ auto TemplateOutput::writeHandle(const model::Attribute &attribute) noexcept -> 
 	// There is only one writable attribute
 	if (attribute == kValueAttribute)
 	{
-		return _writeState.valueWriteHandle(sharedFromThis());
+		// TODO: use the correct value type
+		return { std::in_place_type<double>, &TemplateOutput::scheduleOutputValue, weakFromThis() };
 	}
 
 	return data::WriteHandle::Error::Unknown;

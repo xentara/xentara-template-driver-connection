@@ -12,8 +12,7 @@ namespace xentara::plugins::templateDriver
 
 using namespace std::literals;
 
-template <std::regular DataType>
-auto OutputState<DataType>::resolveAttribute(std::u16string_view name) -> const model::Attribute *
+auto OutputState::resolveAttribute(std::u16string_view name) -> const model::Attribute *
 {
 	// Check all the attributes we support
 	return model::Attribute::resolve(name,
@@ -21,8 +20,7 @@ auto OutputState<DataType>::resolveAttribute(std::u16string_view name) -> const 
 		attributes::kWriteError);
 }
 
-template <std::regular DataType>
-auto OutputState<DataType>::resolveEvent(std::u16string_view name, std::shared_ptr<void> parent) -> std::shared_ptr<process::Event>
+auto OutputState::resolveEvent(std::u16string_view name, std::shared_ptr<void> parent) -> std::shared_ptr<process::Event>
 {
 	// Check all the events we support
 	if (name == u"written"sv)
@@ -38,8 +36,7 @@ auto OutputState<DataType>::resolveEvent(std::u16string_view name, std::shared_p
 	return nullptr;
 }
 
-template <std::regular DataType>
-auto OutputState<DataType>::readHandle(const model::Attribute &attribute) const noexcept -> std::optional<data::ReadHandle>
+auto OutputState::readHandle(const model::Attribute &attribute) const noexcept -> std::optional<data::ReadHandle>
 {
 	// Try reach readable attribute
 	if (attribute == model::Attribute::kWriteTime)
@@ -54,21 +51,13 @@ auto OutputState<DataType>::readHandle(const model::Attribute &attribute) const 
 	return std::nullopt;
 }
 
-template <std::regular DataType>
-auto OutputState<DataType>::valueWriteHandle(std::shared_ptr<void> parent) noexcept -> data::WriteHandle
-{
-	return { std::in_place_type<DataType>, &OutputState<DataType>::schedule, std::shared_ptr<OutputState<DataType>>(parent, this) };
-}
-
-template <std::regular DataType>
-auto OutputState<DataType>::realize() -> void
+auto OutputState::realize() -> void
 {
 	// Create the data block
 	_dataBlock.create(memory::memoryResources::data());
 }
 
-template <std::regular DataType>
-auto OutputState<DataType>::update(std::chrono::system_clock::time_point timeStamp, std::error_code error) -> void
+auto OutputState::update(std::chrono::system_clock::time_point timeStamp, std::error_code error) -> void
 {
 	// Make a write sentinel
 	memory::WriteSentinel sentinel { _dataBlock };
@@ -90,8 +79,5 @@ auto OutputState<DataType>::update(std::chrono::system_clock::time_point timeSta
 		_writeErrorEvent.fire();
 	}
 }
-
-// TODO: add template instantiations for other supported types
-template class OutputState<double>;
 
 } // namespace xentara::plugins::templateDriver
