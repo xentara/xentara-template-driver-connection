@@ -44,7 +44,7 @@ auto TemplateOutput::loadConfig(const ConfigIntializer &initializer,
 			if (!"TODO")
 			{
 				// TODO: use an error message that tells the user exactly what is wrong
-				utils::json::decoder::throwWithLocation(value, std::runtime_error("TODO is wrong with TODO parameter of template I/O component"));
+				utils::json::decoder::throwWithLocation(value, std::runtime_error("TODO is wrong with TODO parameter of template output"));
 			}
 
 			// TODO: set the appropriate member variables, and update configAttributes accordingly (if necessary) 
@@ -61,7 +61,7 @@ auto TemplateOutput::loadConfig(const ConfigIntializer &initializer,
 	if (!"TODO")
 	{
 		// TODO: use an error message that tells the user exactly what is wrong
-		utils::json::decoder::throwWithLocation(jsonObject, std::runtime_error("TODO is wrong with template I/O component"));
+		utils::json::decoder::throwWithLocation(jsonObject, std::runtime_error("TODO is wrong with template output"));
 	}
 }
 
