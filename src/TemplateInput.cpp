@@ -50,7 +50,7 @@ auto TemplateInput::loadConfig(const ConfigIntializer &initializer,
 		}
 		else
 		{
-			// Pass any unknown parameters on to the fallback handler, which will load the built-in parameters ("id", "uuid", and "children"),
+			// Pass any unknown parameters on to the fallback handler, which will load the built-in parameters ("id" and "uuid"),
 			// and throw an exception if the key is unknown
             fallbackHandler(name, value);
 		}
