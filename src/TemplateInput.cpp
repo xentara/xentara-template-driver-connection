@@ -7,7 +7,6 @@
 #include <xentara/data/ReadHandle.hpp>
 #include <xentara/model/Attribute.hpp>
 #include <xentara/process/ExecutionContext.hpp>
-#include <xentara/utils/io/FileInputStream.hpp>
 #include <xentara/utils/json/decoder/Object.hpp>
 #include <xentara/utils/json/decoder/Errors.hpp>
 #include <xentara/utils/eh/currentErrorCode.hpp>
