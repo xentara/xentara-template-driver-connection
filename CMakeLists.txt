@@ -20,6 +20,7 @@ add_library(
 	"src/ReadState.cpp"
 	"src/ReadState.hpp"
 	"src/ReadTask.hpp"
+	"src/SingleValueQueue.hpp"
 	"src/TemplateInput.cpp"
 	"src/TemplateInput.hpp"
 	"src/TemplateIoComponent.cpp"
