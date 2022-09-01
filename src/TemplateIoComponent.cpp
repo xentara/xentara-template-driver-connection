@@ -40,20 +40,20 @@ auto TemplateIoComponent::loadConfig(const ConfigIntializer &initializer,
 	// Go through all the members of the JSON object that represents this object
 	for (auto && [name, value] : jsonObject)
     {
-		// TODO: load configuration parameters
+		/// @todo load configuration parameters
 		if (name == u8"TODO"sv)
 		{
-			// TODO: parse the value correctly
+			/// @todo parse the value correctly
 			auto todo = value.asNumber<std::uint64_t>();
 
-			// TODO: check that the value is valid
+			/// @todo check that the value is valid
 			if (!"TODO")
 			{
-				// TODO: use an error message that tells the user exactly what is wrong
+				/// @todo use an error message that tells the user exactly what is wrong
 				utils::json::decoder::throwWithLocation(value, std::runtime_error("TODO is wrong with TODO parameter of template I/O component"));
 			}
 
-			// TODO: set the appropriate member variables, and update configAttributes accordingly (if necessary) 
+			/// @todo set the appropriate member variables, and update configAttributes accordingly (if necessary) 
 		}
 		else
 		{
@@ -63,10 +63,10 @@ auto TemplateIoComponent::loadConfig(const ConfigIntializer &initializer,
 		}
     }
 
-	// TODO: perform consistency and completeness checks
+	/// @todo perform consistency and completeness checks
 	if (!"TODO")
 	{
-		// TODO: use an error message that tells the user exactly what is wrong
+		/// @todo use an error message that tells the user exactly what is wrong
 		utils::json::decoder::throwWithLocation(jsonObject, std::runtime_error("TODO is wrong with template I/O component"));
 	}
 }
@@ -84,7 +84,7 @@ auto TemplateIoComponent::performReconnectTask(const process::ExecutionContext &
 		return;
 	}
 
-	// TODO: check _lastError to see if a reconnect can succeed at all, and bail if it can't. A reconnect need not be attempted
+	/// @todo check _lastError to see if a reconnect can succeed at all, and bail if it can't. A reconnect need not be attempted
 	// if it requires non-existent hardware, like a missing network adapter or I/O card, for example.
 	// see isConnectionError() for an example on how to check error codes.
 
@@ -96,9 +96,9 @@ auto TemplateIoComponent::connect(std::chrono::system_clock::time_point timeStam
 {
 	try
 	{
-		// TODO: try to establish the connection, and set the _handle object
+		/// @todo try to establish the connection, and set the _handle object
 
-		// TODO: if the connect function does not throw errors, but uses return types or internal handle state,
+		/// @todo if the connect function does not throw errors, but uses return types or internal handle state,
 		// throw an std::system_error here on failure, or call updateState() directly.
 		
 		// Note: If your connect function uses normal system error codes (errno on Linux or GetLastError() on Windows), you
@@ -108,7 +108,7 @@ auto TemplateIoComponent::connect(std::chrono::system_clock::time_point timeStam
 		// The connection was successful
 		updateState(timeStamp, std::error_code());
 	}
-	// TODO: if your connection function throws exceptions that are not derived from std::system_error, but that
+	/// @todo if your connection function throws exceptions that are not derived from std::system_error, but that
 	// still provide some sort of error code, you should catch those exceptions separately and wrap the error code in a custom
 	// error category.
 	catch (const std::exception &exception)
@@ -126,7 +126,7 @@ auto TemplateIoComponent::disconnect(std::chrono::system_clock::time_point timeS
 	// Reset the handle in any case, even if we fail, because the connection state should be false after this
 	auto handle = std::exchange(_handle, Handle());
 
-	// TODO: close the connection, ignoring any errors. If the disconnect function can throw exceptions,
+	/// @todo close the connection, ignoring any errors. If the disconnect function can throw exceptions,
 	// these shoudl be caucht and ignored.
 
 	// This is always a graceful disconnect, regardless of what happened, so never include an error code.
@@ -186,7 +186,7 @@ auto TemplateIoComponent::updateState(std::chrono::system_clock::time_point time
 
 auto TemplateIoComponent::isConnectionError(std::error_code error) noexcept -> bool
 {
-	// TODO: check if this error affects the connection as a whole, and bail if it doesn't.
+	/// @todo check if this error affects the connection as a whole, and bail if it doesn't.
 	// This function should return true on errors that signal that the entire I/O component has stopped working,
 	// like timeouts and network errors, and false on errors thst only affect some inputs and/or outputs, such as
 	// unknown input or output, type mismatch, range errors etc.
@@ -237,7 +237,7 @@ auto TemplateIoComponent::isConnectionError(std::error_code error) noexcept -> b
 		{
 		case CustomError::NotConnected:
 		case CustomError::UnknownError:
-			// TODO: add case statements for other relevant custom errors (like e.g. timeout) here
+			/// @todo add case statements for other relevant custom errors (like e.g. timeout) here
 			return true;
 
 		case CustomError::NoError:
@@ -292,7 +292,7 @@ auto TemplateIoComponent::handleError(std::chrono::system_clock::time_point time
 	}
 
 	// Reset the handle
-	// TODO: gracefully close the handle, if this is necessary
+	/// @todo gracefully close the handle, if this is necessary
 	_handle = Handle();
 
 	// update the error state
@@ -311,14 +311,14 @@ auto TemplateIoComponent::createIo(const io::IoClass &ioClass, plugin::SharedFac
 		return factory.makeShared<TemplateOutput>(*this);
 	}
 
-	// TODO: add any other supported I/O point types
+	/// @todo add any other supported I/O point types
 
 	return nullptr;
 }
 
 auto TemplateIoComponent::resolveAttribute(std::u16string_view name) -> const model::Attribute *
 {
-	// TODO: add any additional attributes this class supports
+	/// @todo add any additional attributes this class supports
 	return model::Attribute::resolve(name,
 		model::Attribute::kDeviceState,
 		attributes::kConnectionTime,
@@ -332,7 +332,7 @@ auto TemplateIoComponent::resolveTask(std::u16string_view name) -> std::shared_p
 		return std::shared_ptr<process::Task>(sharedFromThis(), &_reconnectTask);
 	}
 
-	// TODO resolve any additional tasks
+	/// @todo resolve any additional tasks
 
 	return nullptr;
 }
@@ -349,7 +349,7 @@ auto TemplateIoComponent::resolveEvent(std::u16string_view name) -> std::shared_
 		return std::shared_ptr<process::Event>(sharedFromThis(), &_disconnectedEvent);
 	}
 
-	// TODO resolve any additional events
+	/// @todo resolve any additional events
 
 	return nullptr;
 }
@@ -370,7 +370,7 @@ auto TemplateIoComponent::readHandle(const model::Attribute &attribute) const no
 		return _stateDataBlock.member(&State::_error);
 	}
 
-	// TODO add support for any additional attributes
+	/// @todo add support for any additional attributes
 
 	// Nothing found
 	return data::ReadHandle::Error::Unknown;

@@ -16,70 +16,77 @@
 #include <functional>
 #include <string_view>
 
-// TODO: rename namespace
 namespace xentara::plugins::templateDriver
 {
 
 using namespace std::literals;
 
-// A class representing a specific type of output.
-// TODO: rename this class to something more descriptive
+/// @brief A class representing a specific type of output.
+/// @todo rename this class to something more descriptive
 class TemplateOutput final : public io::Io, public TemplateIoComponent::ErrorSink, public plugin::EnableSharedFromThis<TemplateOutput>
 {
 private:
-	// A structure used to store the class specific attributes within an element's configuration
+	/// @brief A structure used to store the class specific attributes within an element's configuration
 	struct Config final
 	{
-		// TODO: Add custom config attributes
+		/// @todo Add custom config attributes
 	};
 	
 public:
-	// The class object containing meta-information about this element type
+	/// @brief The class object containing meta-information about this element type
 	class Class final : public io::IoClass
 	{
 	public:
-		// Gets the global object
+		/// @brief Gets the global object
 		static auto instance() -> Class&
 		{
 			return _instance;
 		}
 
-	    // Returns the array handle for the class specific attributes within an element's configuration
+	    /// @brief Returns the array handle for the class specific attributes within an element's configuration
 	    auto configHandle() const -> const auto &
         {
             return _configHandle;
         }
 
+		/// @name Virtual Overrides for io::IoClass
+		/// @{
+
 		auto name() const -> std::u16string_view final
 		{
-			// TODO: change class name
+			/// @todo change class name
 			return u"TemplateOutput"sv;
 		}
 	
 		auto uuid() const -> utils::core::Uuid final
 		{
-			// TODO: assign a unique UUID
+			/// @todo assign a unique UUID
 			return "dddddddd-dddd-dddd-dddd-dddddddddddd"_uuid;
 		}
 
+		/// @}
+
 	private:
-	    // The array handle for the class specific attributes within an element's configuration
+	    /// @brief The array handle for the class specific attributes within an element's configuration
 		memory::Array::ObjectHandle<Config> _configHandle { config().appendObject<Config>() };
 
-		// The global object that represents the class
+		/// @brief The global object that represents the class
 		static Class _instance;
 	};
 
-	// This constructor attaches the output to its I/O component
+	/// @brief This constructor attaches the output to its I/O component
 	TemplateOutput(std::reference_wrapper<TemplateIoComponent> ioComponent) :
 		_ioComponent(ioComponent)
 	{
 		ioComponent.get().addErrorSink(*this);
 	}
+	
+	/// @name Virtual Overrides for io::Io
+	/// @{
 
-	auto dataType() const -> const data::DataType &;
+	auto dataType() const -> const data::DataType & final;
 
-	auto directions() const -> io::Directions;
+	auto directions() const -> io::Directions final;
 
 	auto resolveAttribute(std::u16string_view name) -> const model::Attribute * final;
 	
@@ -93,73 +100,92 @@ public:
 
 	auto realize() -> void final;
 
+	/// @}
+
+	/// @name Virtual Overrides for TemplateIoComponent::ErrorSink
+	/// @{
+
 	auto ioComponentStateChanged(std::chrono::system_clock::time_point timeStamp, std::error_code error) -> void final;
 
-	// A Xentara attribute containing the current value. This is a member of this class rather than
-	// of the attributes namespace, because the access flags and type may differ from class to class
+	/// @}
+
+	/// @brief A Xentara attribute containing the current value.
+	/// @note This is a member of this class rather than of the attributes namespace, because the access flags
+	/// and type may differ from class to class
 	static const model::Attribute kValueAttribute;
 
 protected:
+	/// @name Virtual Overrides for io::Io
+	/// @{
+
 	auto loadConfig(const ConfigIntializer &initializer,
 		utils::json::decoder::Object &jsonObject,
 		config::Resolver &resolver,
 		const FallbackConfigHandler &fallbackHandler) -> void final;
+
+	/// @}
 
 private:
 	// The tasks need access to out private member functions
 	friend class ReadTask<TemplateOutput>;
 	friend class WriteTask<TemplateOutput>;
 
-	// This function is forwarded to the I/O component.
+	/// @brief This function is forwarded to the I/O component.
 	auto requestConnect(std::chrono::system_clock::time_point timeStamp) noexcept -> void
 	{
 		_ioComponent.get().requestConnect(timeStamp);
 	}
 
-	// This function is forwarded to the I/O component.
+	/// @brief This function is forwarded to the I/O component.
 	auto requestDisconnect(std::chrono::system_clock::time_point timeStamp) noexcept -> void
 	{
 		_ioComponent.get().requestDisconnect(timeStamp);
 	}
 
-	// This function is called by the "read" task. It attempts to read the value if the I/O component is up.
+	/// @brief This function is called by the "read" task.
+	///
+	/// This function attempts to read the value if the I/O component is up.
 	auto performReadTask(const process::ExecutionContext &context) -> void;
-	// Attempts to read the data from the I/O component and updates the state accordingly.
+	/// @brief Attempts to read the data from the I/O component and updates the state accordingly.
 	auto read(std::chrono::system_clock::time_point timeStamp) -> void;
-	// Handles a read error
+	/// @brief Handles a read error
 	auto handleReadError(std::chrono::system_clock::time_point timeStamp, std::error_code error) -> void;
 
-	// This function is called by the "write" task. It attempts to write the value if the I/O component is up.
+	/// @brief This function is called by the "write" task.
+	///
+	/// This function attempts to write the value if the I/O component is up.
 	auto performWriteTask(const process::ExecutionContext &context) -> void;
-	// Attempts to write any pending value to the I/O component and updates the state accordingly.
+	/// @brief Attempts to write any pending value to the I/O component and updates the state accordingly.
 	auto write(std::chrono::system_clock::time_point timeStamp) -> void;	
-	// Handles a write error
+	/// @brief Handles a write error
 	auto handleWriteError(std::chrono::system_clock::time_point timeStamp, std::error_code error) -> void;
 
-	// Schedules a value to be written. This function is called by the value write handle.
-	// TODO: use the correct value type
+	/// @brief Schedules a value to be written.
+	/// 
+	/// This function is called by the value write handle.
+	/// @todo use the correct value type
 	auto scheduleOutputValue(double value) noexcept
 	{
 		_pendingOutputValue.enqueue(value);
 	}
 
-	// The I/O component this output belongs to
-	// TODO: give this a more descriptive name, e.g. "_device"
+	/// @brief The I/O component this output belongs to
+	/// @todo give this a more descriptive name, e.g. "_device"
 	std::reference_wrapper<TemplateIoComponent> _ioComponent;
 
-	// The read state
-	// TODO: use the correct value type
+	/// @brief The read state
+	/// @todo use the correct value type
 	ReadState<double> _readState;
-	// The write state
+	/// @brief The write state
 	WriteState _writeState;
 
-	// The queue for the pending output value
-	// TODO: use the correct value type
+	/// @brief The queue for the pending output value
+	/// @todo use the correct value type
 	SingleValueQueue<double> _pendingOutputValue;
 
-	// The "read" task
+	/// @brief The "read" task
 	ReadTask<TemplateOutput> _readTask { *this };
-	// The "write" task
+	/// @brief The "write" task
 	WriteTask<TemplateOutput> _writeTask { *this };
 };
 

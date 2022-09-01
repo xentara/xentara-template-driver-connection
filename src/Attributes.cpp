@@ -15,23 +15,22 @@ const model::Attribute kError { model::Attribute::kError, model::Attribute::Acce
 
 const model::Attribute kWriteError { model::Attribute::kWriteError, model::Attribute::Access::ReadOnly, data::DataType::kInteger };
 
-// TODO: assign a unique UUID
+/// @todo assign a unique UUID
 const model::Attribute kConnectionTime { "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"_uuid, u"connectionTime"sv, model::Attribute::Access::ReadOnly, data::DataType::kTimeStamp };
 
-// TODO: assign a unique UUID
+/// @todo assign a unique UUID
 const model::Attribute kDeviceError { "ffffffff-ffff-ffff-ffff-ffffffffffff"_uuid, u"error"sv, model::Attribute::Access::ReadOnly, data::DataType::kInteger };
 
+/// @todo add more offsets for other categories of errors
 namespace
 {
-	// The size of the slices used to partition the error code range into difrferent error types
+	/// @brief The size of the slices used to partition the error code range into difrferent error types
 	constexpr ErrorCode kErrorCodeSliceSize { 1'000'000'000 };
 
-	// The offset used for custom error codes
+	/// @brief The offset used for custom error codes
 	constexpr ErrorCode kCustomErrorOffset { kErrorCodeSliceSize };
 
-	// TODO: add more offsets for other categories of errors
-
-	// The offset used for custom error codes
+	/// @brief The offset used for custom error codes
 	constexpr ErrorCode kUnknownErrorCode { ErrorCode(CustomError::UnknownError) + kCustomErrorOffset };
 }
 	
@@ -84,7 +83,7 @@ auto errorCode(std::error_code error) noexcept -> ErrorCode
 		return errorCode(CustomError(error.value()));
 	}
 
-	// TODO: Handle other categories of errors
+	/// @todo Handle other categories of errors
 
 	// Everything else is an unknown error
 	return kUnknownErrorCode;

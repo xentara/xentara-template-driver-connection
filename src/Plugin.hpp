@@ -5,11 +5,20 @@
 
 #include <xentara/plugin/Plugin.hpp>
 
-// TODO: rename namespace
+/// @namespace xentara
+/// @brief base namespace for Xentara
+
+/// @namespace xentara::plugins
+/// @brief base namespace for Xentara plugins
+
+/// @brief base namespace for the driver
+/// @todo rename namespace
 namespace xentara::plugins::templateDriver
 {
 
-// This is the plugin class. This class registers all the drivers and service providers.
+/// @brief This is the plugin class.
+///
+/// This class registers all the drivers and service providers.
 class Plugin final : plugin::Plugin
 {
 public:
@@ -20,10 +29,10 @@ public:
 	}
 
 private:
-	// The driver object
+	/// @brief The driver object
 	Driver _driver;
 
-	// The global plugin object
+	/// @brief The global plugin object
 	static Plugin _instance;
 };
 

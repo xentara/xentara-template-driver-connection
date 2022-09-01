@@ -31,20 +31,20 @@ auto TemplateInput::loadConfig(const ConfigIntializer &initializer,
 	// Go through all the members of the JSON object that represents this object
 	for (auto && [name, value] : jsonObject)
     {
-		// TODO: load configuration parameters
+		/// @todo load configuration parameters
 		if (name == u8"TODO"sv)
 		{
-			// TODO: parse the value correctly
+			/// @todo parse the value correctly
 			auto todo = value.asNumber<std::uint64_t>();
 
-			// TODO: check that the value is valid
+			/// @todo check that the value is valid
 			if (!"TODO")
 			{
-				// TODO: use an error message that tells the user exactly what is wrong
+				/// @todo use an error message that tells the user exactly what is wrong
 				utils::json::decoder::throwWithLocation(value, std::runtime_error("TODO is wrong with TODO parameter of template input"));
 			}
 
-			// TODO: set the appropriate member variables, and update configAttributes accordingly (if necessary) 
+			/// @todo set the appropriate member variables, and update configAttributes accordingly (if necessary) 
 		}
 		else
 		{
@@ -54,10 +54,10 @@ auto TemplateInput::loadConfig(const ConfigIntializer &initializer,
 		}
     }
 
-	// TODO: perform consistency and completeness checks
+	/// @todo perform consistency and completeness checks
 	if (!"TODO")
 	{
-		// TODO: use an error message that tells the user exactly what is wrong
+		/// @todo use an error message that tells the user exactly what is wrong
 		utils::json::decoder::throwWithLocation(jsonObject, std::runtime_error("TODO is wrong with template input"));
 	}
 }
@@ -78,10 +78,10 @@ auto TemplateInput::read(std::chrono::system_clock::time_point timeStamp) -> voi
 {
 	try
 	{
-		// TODO: read the value
+		/// @todo read the value
 		double value = {};
 
-		// TODO: if the read function does not throw errors, but uses return types or internal handle state,
+		/// @todo if the read function does not throw errors, but uses return types or internal handle state,
 		// throw an std::system_error here on failure, or call handleReadError() directly.
 
 		// The read was successful
@@ -118,7 +118,7 @@ auto TemplateInput::directions() const -> io::Directions
 auto TemplateInput::resolveAttribute(std::u16string_view name) -> const model::Attribute *
 {
 	// Check all the attributes we support directly
-	// TODO: add any additional attributes this class supports, including attributes inherited from the I/O component
+	/// @todo add any additional attributes this class supports, including attributes inherited from the I/O component
 	if (auto attribute = model::Attribute::resolve(name,
 		kValueAttribute))
 	{
@@ -136,7 +136,7 @@ auto TemplateInput::resolveAttribute(std::u16string_view name) -> const model::A
 
 auto TemplateInput::resolveTask(std::u16string_view name) -> std::shared_ptr<process::Task>
 {
-	// TODO: add any additional tasks this class supports
+	/// @todo add any additional tasks this class supports
 	if (name == u"read"sv)
 	{
 		return std::shared_ptr<process::Task>(sharedFromThis(), &_readTask);
@@ -147,9 +147,9 @@ auto TemplateInput::resolveTask(std::u16string_view name) -> std::shared_ptr<pro
 
 auto TemplateInput::resolveEvent(std::u16string_view name) -> std::shared_ptr<process::Event>
 {
-	// TODO: add any events this class supports directly
+	/// @todo add any events this class supports directly
 
-	// Check the read state events
+	// Check the state events
 	if (auto event = _state.resolveEvent(name, sharedFromThis()))
 	{
 		return event;
@@ -160,19 +160,19 @@ auto TemplateInput::resolveEvent(std::u16string_view name) -> std::shared_ptr<pr
 
 auto TemplateInput::readHandle(const model::Attribute &attribute) const noexcept -> data::ReadHandle
 {
-	// TODO: add any additional attributes this class supports
+	/// @todo add any additional attributes this class supports
 	if (attribute == kValueAttribute)
 	{
 		return _state.valueReadHandle();
 	}
 	
-	// Check the read state attributes
+	// Check the state attributes
 	if (auto handle = _state.readHandle(attribute))
 	{
 		return *handle;
 	}
 
-	// TODO: add any attributes inherited from the I/O component
+	/// @todo add any attributes inherited from the I/O component
 
 	return data::ReadHandle::Error::Unknown;
 }

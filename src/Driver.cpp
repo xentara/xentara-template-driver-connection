@@ -10,9 +10,11 @@ namespace xentara::plugins::templateDriver
 class Driver::Environment : public io::Driver::Environment
 {
 public:
-	// TODO: add constructor to perform global initialization, if necessary
+	/// @class xentara::plugins::templateDriver::Driver::Environment
+	/// @todo add constructor to perform global initialization, if necessary
 
-	// TODO: add destructor to perform global cleanup, if necessary
+	/// @class xentara::plugins::templateDriver::Driver::Environment
+	/// @todo add destructor to perform global cleanup, if necessary
 
 	auto createComponent(const io::ComponentClass &componentClass, plugin::SharedFactory<io::Component> &factory)
 		-> std::shared_ptr<io::Component> final;
@@ -27,7 +29,7 @@ auto Driver::Environment::createComponent(const io::ComponentClass &componentCla
 		return factory.makeShared<TemplateIoComponent>();
 	}
 
-	// TODO: handle any additional top-level I/O component classes
+	/// @todo handle any additional top-level I/O component classes
 
 	return nullptr;
 }
