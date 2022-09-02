@@ -28,9 +28,6 @@ public:
 		return Stage::PreOperational | Stage::Operational | Stage::PostOperational;
 	}
 
-	/// @name Virtual Overrides for process::Task
-	/// @{
-
 	auto preparePreOperational(const process::ExecutionContext &context) -> Status final;
 
 	auto preOperational(const process::ExecutionContext &context) -> Status final;
