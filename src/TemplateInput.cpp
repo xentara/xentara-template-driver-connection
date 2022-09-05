@@ -91,7 +91,7 @@ auto TemplateInput::read(std::chrono::system_clock::time_point timeStamp) -> voi
 	{
 		// Get the error from the current exception using this special utility function
 		const auto error = utils::eh::currentErrorCode();
-		// Update the state
+		// Handle the error
 		handleReadError(timeStamp, error);
 	}
 }
