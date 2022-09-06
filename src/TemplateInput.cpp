@@ -118,7 +118,6 @@ auto TemplateInput::directions() const -> io::Directions
 auto TemplateInput::resolveAttribute(std::u16string_view name) -> const model::Attribute *
 {
 	// Check all the attributes we support directly
-	/// @todo add any additional attributes this class supports, including attributes inherited from the I/O component
 	if (auto attribute = model::Attribute::resolve(name,
 		kValueAttribute))
 	{
@@ -131,36 +130,39 @@ auto TemplateInput::resolveAttribute(std::u16string_view name) -> const model::A
 		return attribute;
 	}
 
+	/// @todo add any additional attributes this class supports, including attributes inherited from the I/O component
+
 	return nullptr;
 }
 
 auto TemplateInput::resolveTask(std::u16string_view name) -> std::shared_ptr<process::Task>
 {
-	/// @todo add any additional tasks this class supports
 	if (name == u"read"sv)
 	{
 		return std::shared_ptr<process::Task>(sharedFromThis(), &_readTask);
 	}
+
+	/// @todo add any additional tasks this class supports
 
 	return nullptr;
 }
 
 auto TemplateInput::resolveEvent(std::u16string_view name) -> std::shared_ptr<process::Event>
 {
-	/// @todo add any events this class supports directly
-
 	// Check the state events
 	if (auto event = _state.resolveEvent(name, sharedFromThis()))
 	{
 		return event;
 	}
 
+	/// @todo add any additional events this class supports, including events inherited from the I/O component
+
 	return nullptr;
 }
 
 auto TemplateInput::readHandle(const model::Attribute &attribute) const noexcept -> data::ReadHandle
 {
-	/// @todo add any additional attributes this class supports
+	// Handle the value attribute separately
 	if (attribute == kValueAttribute)
 	{
 		return _state.valueReadHandle();
@@ -172,7 +174,7 @@ auto TemplateInput::readHandle(const model::Attribute &attribute) const noexcept
 		return *handle;
 	}
 
-	/// @todo add any attributes inherited from the I/O component
+	/// @todo add any additional readable attributes this class supports, including attributes inherited from the I/O component
 
 	return data::ReadHandle::Error::Unknown;
 }

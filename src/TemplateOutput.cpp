@@ -169,7 +169,6 @@ auto TemplateOutput::directions() const -> io::Directions
 auto TemplateOutput::resolveAttribute(std::u16string_view name) -> const model::Attribute *
 {
 	// Check all the attributes we support directly
-	/// @todo add any additional attributes this class supports, including attributes inherited from the I/O component
 	if (auto attribute = model::Attribute::resolve(name,
 		kValueAttribute))
 	{
@@ -187,12 +186,13 @@ auto TemplateOutput::resolveAttribute(std::u16string_view name) -> const model::
 		return attribute;
 	}
 
+	/// @todo add any additional attributes this class supports, including attributes inherited from the I/O component
+
 	return nullptr;
 }
 
 auto TemplateOutput::resolveTask(std::u16string_view name) -> std::shared_ptr<process::Task>
 {
-	/// @todo add any additional tasks this class supports
 	if (name == u"read"sv)
 	{
 		return std::shared_ptr<process::Task>(sharedFromThis(), &_readTask);
@@ -202,13 +202,13 @@ auto TemplateOutput::resolveTask(std::u16string_view name) -> std::shared_ptr<pr
 		return std::shared_ptr<process::Task>(sharedFromThis(), &_writeTask);
 	}
 
+	/// @todo add any additional tasks this class supports
+
 	return nullptr;
 }
 
 auto TemplateOutput::resolveEvent(std::u16string_view name) -> std::shared_ptr<process::Event>
 {
-	/// @todo add any events this class supports directly
-
 	// Check the read state events
 	if (auto event = _readState.resolveEvent(name, sharedFromThis()))
 	{
@@ -220,12 +220,14 @@ auto TemplateOutput::resolveEvent(std::u16string_view name) -> std::shared_ptr<p
 		return event;
 	}
 
+	/// @todo add any additional events this class supports, including events inherited from the I/O component
+
 	return nullptr;
 }
 
 auto TemplateOutput::readHandle(const model::Attribute &attribute) const noexcept -> data::ReadHandle
 {
-	/// @todo add any additional attributes this class supports
+	// Handle the value attribute separately
 	if (attribute == kValueAttribute)
 	{
 		return _readState.valueReadHandle();
@@ -242,19 +244,21 @@ auto TemplateOutput::readHandle(const model::Attribute &attribute) const noexcep
 		return *handle;
 	}
 
-	/// @todo add any attributes inherited from the I/O component
+	/// @todo add any additional readable attributes this class supports, including attributes inherited from the I/O component
 
 	return data::ReadHandle::Error::Unknown;
 }
 
 auto TemplateOutput::writeHandle(const model::Attribute &attribute) noexcept -> data::WriteHandle
 {
-	// There is only one writable attribute
+	// Handle the value attribute
 	if (attribute == kValueAttribute)
 	{
 		/// @todo use the correct value type
 		return { std::in_place_type<double>, &TemplateOutput::scheduleOutputValue, weakFromThis() };
 	}
+
+	/// @todo add any additional writable attributes this class supports, including attributes inherited from the I/O component
 
 	return data::WriteHandle::Error::Unknown;
 }
