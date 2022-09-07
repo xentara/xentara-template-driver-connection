@@ -187,8 +187,11 @@ auto TemplateInput::realize() -> void
 
 auto TemplateInput::ioComponentStateChanged(std::chrono::system_clock::time_point timeStamp, std::error_code error) -> void
 {
+	// We cannot reset the error to Ok because we don't have a value. So we use the special custom error code instead.
+	auto effectiveError = error ? error : CustomError::NoData;
+
 	// Update the state. We do not notify the I/O component, because that is who this message comes from in the first place.
-	_state.update(timeStamp, error);
+	_state.update(timeStamp, effectiveError);
 }
 
 } // namespace xentara::plugins::templateDriver

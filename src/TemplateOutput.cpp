@@ -273,10 +273,13 @@ auto TemplateOutput::realize() -> void
 
 auto TemplateOutput::ioComponentStateChanged(std::chrono::system_clock::time_point timeStamp, std::error_code error) -> void
 {
+	// We cannot reset the error to Ok because we don't have a value. So we use the special custom error code instead.
+	auto effectiveError = error ? error : CustomError::NoData;
+
 	// Update the read state. We do not notify the I/O component, because that is who this message comes from in the first place.
 	// Note: the write state is not updated, because the write state simply contains the last write error, which is unaffected
 	// by I/O component errors.
-	_readState.update(timeStamp, error);
+	_readState.update(timeStamp, effectiveError);
 }
 
 } // namespace xentara::plugins::templateDriver
