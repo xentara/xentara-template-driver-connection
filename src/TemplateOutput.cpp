@@ -33,7 +33,7 @@ auto TemplateOutput::loadConfig(const ConfigIntializer &initializer,
 	for (auto && [name, value] : jsonObject)
     {
 		/// @todo load configuration parameters
-		if (name == u8"TODO"sv)
+		if (name == "TODO"sv)
 		{
 			/// @todo parse the value correctly
 			auto todo = value.asNumber<std::uint64_t>();
@@ -166,7 +166,7 @@ auto TemplateOutput::directions() const -> io::Directions
 	return io::Direction::Input | io::Direction::Output;
 }
 
-auto TemplateOutput::resolveAttribute(std::u16string_view name) -> const model::Attribute *
+auto TemplateOutput::resolveAttribute(std::string_view name) -> const model::Attribute *
 {
 	// Check all the attributes we support directly
 	if (auto attribute = model::Attribute::resolve(name,
@@ -191,13 +191,13 @@ auto TemplateOutput::resolveAttribute(std::u16string_view name) -> const model::
 	return nullptr;
 }
 
-auto TemplateOutput::resolveTask(std::u16string_view name) -> std::shared_ptr<process::Task>
+auto TemplateOutput::resolveTask(std::string_view name) -> std::shared_ptr<process::Task>
 {
-	if (name == u"read"sv)
+	if (name == "read"sv)
 	{
 		return std::shared_ptr<process::Task>(sharedFromThis(), &_readTask);
 	}
-	else if (name == u"write"sv)
+	else if (name == "write"sv)
 	{
 		return std::shared_ptr<process::Task>(sharedFromThis(), &_writeTask);
 	}
@@ -207,7 +207,7 @@ auto TemplateOutput::resolveTask(std::u16string_view name) -> std::shared_ptr<pr
 	return nullptr;
 }
 
-auto TemplateOutput::resolveEvent(std::u16string_view name) -> std::shared_ptr<process::Event>
+auto TemplateOutput::resolveEvent(std::string_view name) -> std::shared_ptr<process::Event>
 {
 	// Check the read state events
 	if (auto event = _readState.resolveEvent(name, sharedFromThis()))
