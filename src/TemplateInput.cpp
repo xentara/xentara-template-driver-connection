@@ -100,7 +100,7 @@ auto TemplateInput::handleReadError(std::chrono::system_clock::time_point timeSt
 	-> void
 {
 	// Update our own state
-	_state.update(timeStamp, error);
+	_state.update(timeStamp, utils::eh::unexpected(error));
 	// Notify the I/O component
 	_ioComponent.get().handleError(timeStamp, error, this);
 }
@@ -191,7 +191,7 @@ auto TemplateInput::ioComponentStateChanged(std::chrono::system_clock::time_poin
 	auto effectiveError = error ? error : CustomError::NoData;
 
 	// Update the state. We do not notify the I/O component, because that is who this message comes from in the first place.
-	_state.update(timeStamp, effectiveError);
+	_state.update(timeStamp, utils::eh::unexpected(effectiveError));
 }
 
 } // namespace xentara::plugins::templateDriver

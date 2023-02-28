@@ -101,7 +101,7 @@ auto TemplateOutput::handleReadError(std::chrono::system_clock::time_point timeS
 	-> void
 {
 	// Update our own state
-	_readState.update(timeStamp, error);
+	_readState.update(timeStamp, utils::eh::unexpected(error));
 	// Notify the I/O component
 	_ioComponent.get().handleError(timeStamp, error, this);
 }
@@ -279,7 +279,7 @@ auto TemplateOutput::ioComponentStateChanged(std::chrono::system_clock::time_poi
 	// Update the read state. We do not notify the I/O component, because that is who this message comes from in the first place.
 	// Note: the write state is not updated, because the write state simply contains the last write error, which is unaffected
 	// by I/O component errors.
-	_readState.update(timeStamp, effectiveError);
+	_readState.update(timeStamp, utils::eh::unexpected(effectiveError));
 }
 
 } // namespace xentara::plugins::templateDriver
