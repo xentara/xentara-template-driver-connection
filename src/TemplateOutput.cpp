@@ -2,11 +2,16 @@
 #include "TemplateOutput.hpp"
 
 #include "Attributes.hpp"
+#include "Tasks.hpp"
 
+#include <xentara/config/FallbackHandler.hpp>
 #include <xentara/data/DataType.hpp>
 #include <xentara/data/ReadHandle.hpp>
 #include <xentara/data/WriteHandle.hpp>
 #include <xentara/model/Attribute.hpp>
+#include <xentara/model/ForEachAttributeFunction.hpp>
+#include <xentara/model/ForEachEventFunction.hpp>
+#include <xentara/model/ForEachTaskFunction.hpp>
 #include <xentara/process/ExecutionContext.hpp>
 #include <xentara/utils/json/decoder/Object.hpp>
 #include <xentara/utils/json/decoder/Errors.hpp>
@@ -24,7 +29,7 @@ const model::Attribute TemplateOutput::kValueAttribute { model::Attribute::kValu
 auto TemplateOutput::loadConfig(const ConfigIntializer &initializer,
 		utils::json::decoder::Object &jsonObject,
 		config::Resolver &resolver,
-		const FallbackConfigHandler &fallbackHandler) -> void
+		const config::FallbackHandler &fallbackHandler) -> void
 {
 	// Get a reference that allows us to modify our own config attributes
     auto &&configAttributes = initializer[Class::instance().configHandle()];
@@ -166,66 +171,42 @@ auto TemplateOutput::directions() const -> io::Directions
 	return io::Direction::Input | io::Direction::Output;
 }
 
-auto TemplateOutput::resolveAttribute(std::string_view name) -> const model::Attribute *
+auto TemplateOutput::forEachAttribute(const model::ForEachAttributeFunction &function) const -> bool
 {
-	// Check all the attributes we support directly
-	if (auto attribute = model::Attribute::resolve(name,
-		kValueAttribute))
-	{
-		return attribute;
-	}
+	return
+		// Handle all the attributes we support directly
+		function(kValueAttribute) ||
 
-	// Check the read state attributes
-	if (auto attribute = _readState.resolveAttribute(name))
-	{
-		return attribute;
-	}
-	// Check the write state attributes
-	if (auto attribute = _writeState.resolveAttribute(name))
-	{
-		return attribute;
-	}
+		// Handle the read state attributes
+		_readState.forEachAttribute(function) ||
+		// Handle the write state attributes
+		_writeState.forEachAttribute(function);
 
-	/// @todo add any additional attributes this class supports, including attributes inherited from the I/O component
-
-	return nullptr;
+	/// @todo handle any additional attributes this class supports, including attributes inherited from the I/O component
 }
 
-auto TemplateOutput::resolveTask(std::string_view name) -> std::shared_ptr<process::Task>
+auto TemplateOutput::forEachEvent(const model::ForEachEventFunction &function) -> bool
 {
-	if (name == "read"sv)
-	{
-		return std::shared_ptr<process::Task>(sharedFromThis(), &_readTask);
-	}
-	else if (name == "write"sv)
-	{
-		return std::shared_ptr<process::Task>(sharedFromThis(), &_writeTask);
-	}
+	return
+		// Handle the read state events
+		_readState.forEachEvent(function, sharedFromThis()) ||
+		// Handle the write state events
+		_writeState.forEachEvent(function, sharedFromThis());
 
-	/// @todo add any additional tasks this class supports
-
-	return nullptr;
+	/// @todo handle any additional events this class supports, including events inherited from the I/O component
 }
 
-auto TemplateOutput::resolveEvent(std::string_view name) -> std::shared_ptr<process::Event>
+auto TemplateOutput::forEachTask(const model::ForEachTaskFunction &function) -> bool
 {
-	// Check the read state events
-	if (auto event = _readState.resolveEvent(name, sharedFromThis()))
-	{
-		return event;
-	}
-	// Check the write state events
-	if (auto event = _writeState.resolveEvent(name, sharedFromThis()))
-	{
-		return event;
-	}
+	// Handle all the tasks we support
+	return
+		function(tasks::kRead, sharedFromThis(&_readTask)) ||
+		function(tasks::kWrite, sharedFromThis(&_writeTask));
 
-	/// @todo add any additional events this class supports, including events inherited from the I/O component
-
-	return nullptr;
+	/// @todo handle any additional tasks this class supports
 }
 
-auto TemplateOutput::readHandle(const model::Attribute &attribute) const noexcept -> data::ReadHandle
+auto TemplateOutput::makeReadHandle(const model::Attribute &attribute) const noexcept -> std::optional<data::ReadHandle>
 {
 	// Handle the value attribute separately
 	if (attribute == kValueAttribute)
@@ -233,35 +214,35 @@ auto TemplateOutput::readHandle(const model::Attribute &attribute) const noexcep
 		return _readState.valueReadHandle();
 	}
 	
-	// Check the read state attributes
-	if (auto handle = _readState.readHandle(attribute))
+	// Handle the read state attributes
+	if (auto handle = _readState.makeReadHandle(attribute))
 	{
-		return *handle;
+		return handle;
 	}
-	// Check the write state attributes
-	if (auto handle = _writeState.readHandle(attribute))
+	// Handle the write state attributes
+	if (auto handle = _writeState.makeReadHandle(attribute))
 	{
-		return *handle;
+		return handle;
 	}
 
-	/// @todo add any additional readable attributes this class supports, including attributes inherited from the I/O component
+	/// @todo handle any additional readable attributes this class supports, including attributes inherited from the I/O component
 
-	return data::ReadHandle::Error::Unknown;
+	return std::nullopt;
 }
 
-auto TemplateOutput::writeHandle(const model::Attribute &attribute) noexcept -> data::WriteHandle
+auto TemplateOutput::makeWriteHandle(const model::Attribute &attribute) noexcept -> std::optional<data::WriteHandle>
 {
 	// Handle the value attribute
 	if (attribute == kValueAttribute)
 	{
 		// This magic code creates a write handle of type double that calls scheduleWrite() on this.
 		/// @todo use the correct value type
-		return { std::in_place_type<double>, &TemplateOutput::scheduleOutputValue, weakFromThis() };
+		return data::WriteHandle { std::in_place_type<double>, &TemplateOutput::scheduleOutputValue, weakFromThis() };
 	}
 
-	/// @todo add any additional writable attributes this class supports, including attributes inherited from the I/O component
+	/// @todo handle any additional writable attributes this class supports, including attributes inherited from the I/O component
 
-	return data::WriteHandle::Error::Unknown;
+	return std::nullopt;
 }
 
 auto TemplateOutput::realize() -> void

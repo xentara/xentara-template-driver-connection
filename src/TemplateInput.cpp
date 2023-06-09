@@ -2,10 +2,15 @@
 #include "TemplateInput.hpp"
 
 #include "Attributes.hpp"
+#include "Tasks.hpp"
 
+#include <xentara/config/FallbackHandler.hpp>
 #include <xentara/data/DataType.hpp>
 #include <xentara/data/ReadHandle.hpp>
 #include <xentara/model/Attribute.hpp>
+#include <xentara/model/ForEachAttributeFunction.hpp>
+#include <xentara/model/ForEachEventFunction.hpp>
+#include <xentara/model/ForEachTaskFunction.hpp>
 #include <xentara/process/ExecutionContext.hpp>
 #include <xentara/utils/json/decoder/Object.hpp>
 #include <xentara/utils/json/decoder/Errors.hpp>
@@ -23,7 +28,7 @@ const model::Attribute TemplateInput::kValueAttribute { model::Attribute::kValue
 auto TemplateInput::loadConfig(const ConfigIntializer &initializer,
 		utils::json::decoder::Object &jsonObject,
 		config::Resolver &resolver,
-		const FallbackConfigHandler &fallbackHandler) -> void
+		const config::FallbackHandler &fallbackHandler) -> void
 {
 	// Get a reference that allows us to modify our own config attributes
     auto &&configAttributes = initializer[Class::instance().configHandle()];
@@ -115,52 +120,37 @@ auto TemplateInput::directions() const -> io::Directions
 	return io::Direction::Input;
 }
 
-auto TemplateInput::resolveAttribute(std::string_view name) -> const model::Attribute *
+auto TemplateInput::forEachAttribute(const model::ForEachAttributeFunction &function) const -> bool
 {
-	// Check all the attributes we support directly
-	if (auto attribute = model::Attribute::resolve(name,
-		kValueAttribute))
-	{
-		return attribute;
-	}
+	return
+		// Handle all the attributes we support directly
+		function(kValueAttribute) ||
 
-	// Check the read state attributes
-	if (auto attribute = _state.resolveAttribute(name))
-	{
-		return attribute;
-	}
+		// Handle the state attributes
+		_state.forEachAttribute(function);
 
-	/// @todo add any additional attributes this class supports, including attributes inherited from the I/O component
-
-	return nullptr;
+	/// @todo handle any additional attributes this class supports, including attributes inherited from the I/O component
 }
 
-auto TemplateInput::resolveTask(std::string_view name) -> std::shared_ptr<process::Task>
+auto TemplateInput::forEachEvent(const model::ForEachEventFunction &function) -> bool
 {
-	if (name == "read"sv)
-	{
-		return std::shared_ptr<process::Task>(sharedFromThis(), &_readTask);
-	}
+	return
+		// Handle the state events
+		_state.forEachEvent(function, sharedFromThis());
 
-	/// @todo add any additional tasks this class supports
-
-	return nullptr;
+	/// @todo handle any additional events this class supports, including events inherited from the I/O component
 }
 
-auto TemplateInput::resolveEvent(std::string_view name) -> std::shared_ptr<process::Event>
+auto TemplateInput::forEachTask(const model::ForEachTaskFunction &function) -> bool
 {
-	// Check the state events
-	if (auto event = _state.resolveEvent(name, sharedFromThis()))
-	{
-		return event;
-	}
+	// Handle all the tasks we support
+	return
+		function(tasks::kRead, sharedFromThis(&_readTask));
 
-	/// @todo add any additional events this class supports, including events inherited from the I/O component
-
-	return nullptr;
+	/// @todo handle any additional tasks this class supports
 }
 
-auto TemplateInput::readHandle(const model::Attribute &attribute) const noexcept -> data::ReadHandle
+auto TemplateInput::makeReadHandle(const model::Attribute &attribute) const noexcept -> std::optional<data::ReadHandle>
 {
 	// Handle the value attribute separately
 	if (attribute == kValueAttribute)
@@ -168,15 +158,15 @@ auto TemplateInput::readHandle(const model::Attribute &attribute) const noexcept
 		return _state.valueReadHandle();
 	}
 	
-	// Check the state attributes
-	if (auto handle = _state.readHandle(attribute))
+	// Handle the state attributes
+	if (auto handle = _state.makeReadHandle(attribute))
 	{
-		return *handle;
+		return handle;
 	}
 
-	/// @todo add any additional readable attributes this class supports, including attributes inherited from the I/O component
+	/// @todo handle any additional readable attributes this class supports, including attributes inherited from the I/O component
 
-	return data::ReadHandle::Error::Unknown;
+	return std::nullopt;
 }
 
 auto TemplateInput::realize() -> void
