@@ -26,8 +26,6 @@ add_library(
 	"src/CustomError.hpp"
 	"src/Events.cpp"
 	"src/Events.hpp"
-	"src/Plugin.cpp"
-	"src/Plugin.hpp"
 	"src/ReadState.cpp"
 	"src/ReadState.hpp"
 	"src/ReadTask.hpp"
