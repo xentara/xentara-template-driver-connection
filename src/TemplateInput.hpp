@@ -66,16 +66,6 @@ public:
 	/// and type may differ from class to class
 	static const model::Attribute kValueAttribute;
 
-protected:
-	/// @name Virtual Overrides for skill::DataPoint
-	/// @{
-
-	auto load(utils::json::decoder::Object &jsonObject,
-		config::Resolver &resolver,
-		const config::FallbackHandler &fallbackHandler) -> void final;
-	
-	/// @}
-
 private:
 	/// @brief The read task needs access to out private member functions
 	friend class ReadTask<TemplateInput>;
@@ -100,6 +90,13 @@ private:
 	auto read(std::chrono::system_clock::time_point timeStamp) -> void;
 	/// @brief Handles a read error
 	auto handleReadError(std::chrono::system_clock::time_point timeStamp, std::error_code error) -> void;
+
+	/// @name Virtual Overrides for skill::DataPoint
+	/// @{
+
+	auto load(utils::json::decoder::Object &jsonObject, config::Context &context) -> void final;
+
+	/// @}
 
 	/// @brief The I/O component this input belongs to
 	/// @todo give this a more descriptive name, e.g. "_device"

@@ -4,7 +4,7 @@
 #include "Attributes.hpp"
 #include "Tasks.hpp"
 
-#include <xentara/config/FallbackHandler.hpp>
+#include <xentara/config/Errors.hpp>
 #include <xentara/data/DataType.hpp>
 #include <xentara/data/ReadHandle.hpp>
 #include <xentara/model/Attribute.hpp>
@@ -23,9 +23,7 @@ using namespace std::literals;
 
 const model::Attribute TemplateInput::kValueAttribute { model::Attribute::kValue, model::Attribute::Access::ReadOnly, data::DataType::kFloatingPoint };
 
-auto TemplateInput::load(utils::json::decoder::Object &jsonObject,
-	config::Resolver &resolver,
-	const config::FallbackHandler &fallbackHandler) -> void
+auto TemplateInput::load(utils::json::decoder::Object &jsonObject, config::Context &context) -> void
 {
 	// Go through all the members of the JSON object that represents this object
 	for (auto && [name, value] : jsonObject)
@@ -47,9 +45,7 @@ auto TemplateInput::load(utils::json::decoder::Object &jsonObject,
 		}
 		else
 		{
-			// Pass any unknown parameters on to the fallback handler, which will load the built-in parameters ("id" and "uuid"),
-			// and throw an exception if the key is unknown
-            fallbackHandler(name, value);
+            config::throwUnknownParameterError(name);
 		}
     }
 

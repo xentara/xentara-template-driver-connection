@@ -72,16 +72,6 @@ public:
 	/// and type may differ from class to class
 	static const model::Attribute kValueAttribute;
 
-protected:
-	/// @name Virtual Overrides for skill::DataPoint
-	/// @{
-
-	auto load(utils::json::decoder::Object &jsonObject,
-		config::Resolver &resolver,
-		const config::FallbackHandler &fallbackHandler) -> void final;
-
-	/// @}
-
 private:
 	// The tasks need access to out private member functions
 	friend class ReadTask<TemplateOutput>;
@@ -125,6 +115,13 @@ private:
 	{
 		_pendingOutputValue.enqueue(value);
 	}
+
+	/// @name Virtual Overrides for skill::DataPoint
+	/// @{
+
+	auto load(utils::json::decoder::Object &jsonObject, config::Context &context) -> void final;
+
+	/// @}
 
 	/// @brief The I/O component this output belongs to
 	/// @todo give this a more descriptive name, e.g. "_device"
