@@ -50,8 +50,6 @@ public:
 
 	auto makeReadHandle(const model::Attribute &attribute) const noexcept -> std::optional<data::ReadHandle> final;
 
-	auto realize() -> void final;
-
 	/// @}
 
 	/// @name Virtual Overrides for TemplateIoComponent::ErrorSink
@@ -95,6 +93,8 @@ private:
 	/// @{
 
 	auto load(utils::json::decoder::Object &jsonObject, config::Context &context) -> void final;
+
+	auto realize() -> void final;
 
 	/// @}
 
