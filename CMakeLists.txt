@@ -29,7 +29,6 @@ add_library(
 	"src/ReadState.cpp"
 	"src/ReadState.hpp"
 	"src/ReadTask.hpp"
-	"src/SingleValueQueue.hpp"
 	"src/Skill.cpp"
 	"src/Skill.hpp"
 	"src/Tasks.cpp"
